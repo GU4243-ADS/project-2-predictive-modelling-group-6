@@ -1,0 +1,163 @@
+---
+title: "Classification method"
+author: "Kai"
+date: "February 25, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+library(reticulate)
+
+# If you are using anaconda, point reticulate to the correct conda environment
+# use_condaenv('your-environment')
+
+# for some reason I need to import cv2 and tensorflow before EBImage
+# or everything breaks.
+#cv2 <- reticulate::import('cv2')
+
+library(EBImage)
+library(tensorflow)
+library(keras)
+
+```
+
+
+##Read images
+
+
+```{r}
+# set the working direction
+#setwd("../data/pets_training/pets/train")
+# load pictures one by one
+#pics <- c("sss")
+
+
+ID <- list(1:200)
+label <- read.table("../data/pets_training/pets/train_label.txt")
+
+imgdata <- data.frame(ID,label)
+s1 <- "pet"
+s3 <- ".jpg"
+
+pics <- list()
+for(i in 1:2000){
+  s2 <- toString(i)
+  pics[[i]] <- paste(s1, s2, s3,sep = "")
+}
+
+
+mypic <- list()
+for (i in 1:length(pics)) {
+  mypic[[i]] <- readImage(paste("../data/pets_training/pets/train/",pics[i],sep=""))
+  }
+
+
+```
+
+# tensor flow
+```{r}
+# Resize
+for (i in 1:length(pics)) {
+  mypic[[i]] <- resize(mypic[[i]], 28 ,28) 
+  }
+# Reshape
+for (i in 1:length(pics)) {
+  mypic[[i]] <- array_reshape(mypic[[i]], c(28 ,28,3))
+}
+
+#training data 
+trainx <- NULL
+
+for (i in 1:length(pics)) {
+  trainx <- rbind(trainx, mypic[[i]])
+}
+
+str(trainx)
+
+trainy <- list()
+
+for (i in 1:nrow(imgdata)) {
+  if (imgdata$V1[i]=="dog"){
+    trainy[i] <-1
+  }
+  else{
+    trainy[i] <-0
+  }
+}
+
+
+```
+
+
+```{r}
+#One Hot Encoding
+trainlabels <- to_categorical(trainy)
+
+
+#Create the model (where to recreate the model)
+model <- keras_model_sequential()
+model %>%
+  layer_dense(units= 256, activation = "relu", input_shape = c(2352)) %>%
+  layer_dense(units= 128, activation = "relu") %>%
+  layer_dense(units= 2, activation = "softmax")
+
+summary(model)
+
+# compile
+model %>%
+  compile(loss ="binary_crossentropy",
+          optimizer = optimizer_rmsprop(),
+          metrics = c("accuracy"))
+
+#Fit Model
+history <- model %>%
+  fit(trainx, 
+      trainlabels,
+      epochs = 30, 
+      batch_size = 32,
+      validation_split = 0.2) #20% data used for training
+
+plot(history)
+
+
+```
+   
+
+
+```{r}
+#model evalutaion
+
+model %>% evaluate(trainx,trainlabels)
+pred <- model %>% predict_classes(trainx)
+table(Predicted = pred, Actural = trainy)
+prob <-  model %>% predict_proba(trainx)
+cbind(prob, Prected=pred, Actual=trainy)
+  
+```
+
+```{r}
+# model testing
+
+#model %>% evaluate(textx,textlabels)
+#pred <- model%>%predict_classes(textx)
+
+
+```
+
+
+
+
+
+
+
+
