@@ -172,10 +172,11 @@ HOG_feature_extraction<- function(img_dir, export=T){
   cellSize <- tuple(8L,8L) # size of one cell
   nbins = 9L # 9 orientations
   hog = cv2$HOGDescriptor(winSize,blockSize,blockStride,cellSize,nbins)
-  pb <- txtProgressBar(min = 0, max = n_files, style = 3) # Make a progress bar
   
   
   n_files <- length(list.files(img_dir)) # number of total image files
+  pb <- txtProgressBar(min = 0, max = n_files, style = 3) # Make a progress bar
+  
   
   ### calculate HOG values and store them
   dat <- matrix(NA, n_files, ncol=1764) 
@@ -190,7 +191,7 @@ HOG_feature_extraction<- function(img_dir, export=T){
   close(pb)
   ### output constructed features
   if(export){
-    save(dat, file = paste0("../output/feature_HOG", ".RData"))
+    save(dat, file = paste0("../output/train_feature_HOG", ".RData"))
   }
   return(dat)
 }
