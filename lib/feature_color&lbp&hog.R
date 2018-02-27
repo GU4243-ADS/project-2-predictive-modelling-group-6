@@ -21,6 +21,7 @@ feature <- function(img_dir, run.color = T, run.LBP = F, run.HOG = F, export=T){
   library("EBImage")
   library(reticulate)
   library("wvtool")
+  library("plyr")
   cv2 <- reticulate::import('cv2')
   
   if(run.color){
@@ -45,7 +46,7 @@ color_feature_extraction <- function(img_dir, export = T){
 
     
     n_files <- length(list.files(img_dir)) # number of files in the directory
-    n_names <- list.files(img_dir) # the names of all the images in the directory
+    n_names <- paste0( "pet", 1:n_files, ".jpg") # the names of all the images in the directory
     intervals_RGB <- seq(0,1,length.out = n_intervals) # the limits for the levels
     intervals_value <- seq(0,0.005, length.out = n_intervals) # the limits for the levels for the V in HSV
     pb <- txtProgressBar(min = 0, max = n_files, style = 3) # Make a progress bar
@@ -92,7 +93,7 @@ color_feature_extraction <- function(img_dir, export = T){
       
     }
     close(pb)
-    color_features <- merge(RGB, HSV, by.x = "Image")
+    color_features <- join(RGB, HSV, by.x = "Image")
     ### output constructed features
     if(export){
       save(color_features, file = "../output/train_feature_color.RData")
@@ -115,7 +116,7 @@ LBP_feature_extraction <- function(img_dir, export = T){
   n_resize <- 128 # the uniform size we want for all the images
   n_intervals_LBP <- 30 # How many levels we want to set for LBP intensity
   n_files <- length(list.files(img_dir)) # number of files in the directory
-  n_names <- list.files(img_dir) # the names of all the images in the directory
+  n_names <- paste0( "pet", 1:n_files, ".jpg") # the names of all the images in the directory
   intervals_LBP <- seq(0,255, length.out = n_intervals_LBP) # the limits for the levels for LBP features
   pb <- txtProgressBar(min = 0, max = n_files, style = 3) # Make a progress bar
   
@@ -173,27 +174,26 @@ HOG_feature_extraction<- function(img_dir, export=T){
   nbins = 9L # 9 orientations
   hog = cv2$HOGDescriptor(winSize,blockSize,blockStride,cellSize,nbins)
   
-  
   n_files <- length(list.files(img_dir)) # number of total image files
-  pb <- txtProgressBar(min = 0, max = n_files, style = 3) # Make a progress bar
-  
+  n_names <- paste0( "pet", 1:n_files, ".jpg")
   
   ### calculate HOG values and store them
-  dat <- matrix(NA, n_files, ncol=1764) 
+  HOG <- data.frame(matrix(NA, n_files, ncol=1765))
+  colnames(HOG) <- c("Image", paste("HOG_", 1:1764, sep = ""))
+  HOG$Image <- n_names
   for(i in 1:n_files){
-    img <- cv2$imread(paste0(img_dir, "pet", i, ".jpg"))/255 # read in the images
+    img <- cv2$imread(paste0(img_dir, "pet", i, ".jpg"))/255  # read in the images
     img_resized <- cv2$resize(img, dsize=tuple(64L, 64L)) # resize the graph
     hog_values <- hog$compute(np_array(img_resized * 255, dtype='uint8')) # compute the HOG calues
-    dat[i,] <- hog_values
-    # update progress bar
-    setTxtProgressBar(pb, i)
+    HOG[i,2:1765] <- hog_values
   }
-  close(pb)
+  
   ### output constructed features
   if(export){
-    save(dat, file = paste0("../output/train_feature_HOG", ".RData"))
+    save(HOG, file = paste0("../output/feature_HOG", ".RData"))
   }
-  return(dat)
+  return(HOG)
+  
 }
 
 
