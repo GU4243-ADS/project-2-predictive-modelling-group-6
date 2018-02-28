@@ -9,31 +9,110 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-1. Import the training and test data
-```{r}
-train_color <- load("../data/split_data/train/train_color.Rdata")
-train_HOG <- load("../data/split_data/train/train_HOG.Rdata")
-train_label <- load("../data/split_data/train/train_label.Rdata")
-train_LBP <- load("../data/split_data/train/train_LBP.Rdata")
+1. Import the training and test data from the `/data/` subdirectory in the project structure. This partition is a randomly generated and reproducible 80% - 20% split, as discussed in our group's 2-26-18 meeting.
 
-test_color <- load("../data/split_data/test/test_color.Rdata")
-test_HOG <- load("../data/split_data/test/test_HOG.Rdata")
-test_label <- load("../data/split_data/test/test_label.Rdata")
-test_LBP <- load("../data/split_data/test/test_LBP.Rdata")
+```{r Import data}
+# Training data:
+# train_color
+# train_HOG
+# train_LBP
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_color.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_HOG.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_LBP.Rdata")
+
+# Training labels:
+# train_label
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_label.Rdata")
+
+# Test data:
+# test_color
+# test_HOG
+# test_LBP
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_color.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_HOG.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_LBP.Rdata")
+
+# Test labels:
+# test_label
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_label.Rdata")
 ```
-2. Create base "train_rf" function.
 
-3. Run cross validation over parameters = number of trees, anything else? to select best parameters.
-a. Create loop to create tree using train_rf for each set.
-b. Determine best parameters by comparing performance metric.
+1a. Note that the training and test labels have the same *ordering* as the feature datasets. But the original image numbers have been maintained in the datasets. Because we will build the machine learning model on a combined dataframe including *both* the labels *and* the data, we'll need to replace the rownames, and perform a merge for both the training and test data.
 
-4. Train final tree with best parameters using train_rf.
+```{r Fix labels and perform training and test merge}
+require(tidyverse, quietly = TRUE) # For the pipeline operator %>%
 
-5. Record the final accuracy and the amount of time needed to construct tree and make predictions.
+rownames(train_color) <- 1:1600
+rownames(train_HOG) <- 1:1600
+rownames(train_LBP) <- 1:1600
 
-```{r Train Random Forest, eval=FALSE, include=FALSE}
+rownames(test_color) <- 1:400
+rownames(test_HOG) <- 1:400
+rownames(test_LBP) <- 1:400
+```
 
-library(randomForest)
+```{r}
+train_data <-
+  train_label %>%
+#  merge(train_color) %>%
+#  merge(train_HOG) %>%
+  merge(train_LBP, by = 0, sort = FALSE) %>%
+  select(-Row.names) %>%
+  select(-Image)
+```
+
+```{r}
+test_data <-
+  test_label %>%
+#  merge(test_color) %>%
+#  merge(test_HOG) %>%
+  merge(test_LBP, by = 0, sort = FALSE) %>%
+  select(-Row.names) %>%
+  select(-Image)
+# "row.names"
+```
+
+Our data are now ready to generate random forests with!
+
+2. Create the base "train_rf" function.
+
+```{r Random forest generation, eval=FALSE, include=FALSE}
+require(randomForest, quietly = TRUE)
+
+set.seed(1)
+
+train_rf <- function(training_data){
+  # Input: training data. 
+  ## The first column is named "label". "cat" and "dog" are the two levels of this factor.
+  ## The remaining columns are the extracted image features.
+  
+  # Value:
+  ## a random forest object that has been optimized for "mtry",
+  ## the number of randomized features over which to search
+  ## at each step of tree-building.
+  ### Note: this means that this parameter does not need to be searched
+  ### over during cross-validation.
+  
+  response <- training_data$label
+  predictors <- test_data[2:length(test_data)]
+  return(tuneRF(predictors, response, ntreeTry = 500, doBest = TRUE))
+}
+```
+
+To do:
+
+Use the `caret` package to create a concise and readable version of cross validation for RF.
+
+Parameters to think about:
+-Number of trees?
+-Tree depth?
+-`m`, the number of predictors to randomly look at at each treebuilding step
+
+Train final tree with best parameters using train_rf.
+
+Record the final accuracy and the amount of time needed to construct tree and make predictions.
+
+```{r Example caret code from old group - to update, eval=FALSE, include=FALSE}
 
 train_rf = function(dat_train){
   
@@ -57,56 +136,4 @@ train_rf = function(dat_train){
   
   return(list(fit = rf.fit, time = rf_time))
 }
-```
-
-```{r Random Forest Version 2, eval=FALSE, include=FALSE}
-
-
-raw_data <- read.csv('../data/feature.csv',header = F,skip = 1)
-raw_data <- raw_data[,2:ncol(raw_data)]
-raw_data$y <- as.factor(read.csv('../data/label_train.csv',header = F,skip = 1)[,2])
-
-# build model
-train.rf<- function(traindata) {
-  
-  traindata$y<- as.factor(traindata$y)
-  y.index<- which(colnames(traindata)=="y")
-  bestmtry <- tuneRF(y= traindata$y, x= traindata[,-y.index], stepFactor=1.5, improve=1e-5, ntree=600)
-  best.mtry <- bestmtry[,1][which.min(bestmtry[,2])]
-  
-  model.rf <- randomForest(y ~ ., data = traindata, ntree=600, mtry=best.mtry, importance=T)
-  return(model.rf)
-}
-# predict model
-test.rf <- function(model,test.data) {
-  return(predict(model, test.data, type = "class"))
-}
-
-# main_part : k fold cross validation
-K <- 5
-n <- nrow(raw_data)
-n.fold <- floor(n/K)
-s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)))
-
-cv.error.rf <- rep(NA, K)
-
-for (i in 1:K){
-  print(i)
-
-  train.data <- raw_data[s != i,]
-  test.data <- raw_data[s == i,]
-  
-  fit.rf <- train.rf(train.data)
-  pred.rf <- test.rf(fit.rf, test.data)  
-  cv.error.rf[i] <- mean(pred.rf != test.data$y)
-
-}			
-cv.error.rf
-
-
-# test part
-#rf <- train.rf(traindata = raw_data[1:1000,])
-#fit.rf <- train.rf(train_data)
-#pred.rf <- test.rf(fit.rf, test_data)  
-#accuracy<- mean(pred.rf != test_data$y)
 ```

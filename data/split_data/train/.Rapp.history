@@ -1,1 +1,3 @@
 load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_label.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_color.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_color.Rdata")
