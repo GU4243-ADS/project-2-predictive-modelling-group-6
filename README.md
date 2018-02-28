@@ -1,8 +1,6 @@
-# Columbia University, Department of Statistics
-# STAT GU4243 Applied Data Science, Spring, 2018
-# Project 2: Cat or Dog: Predictive Modelling and Computation Time Optimization
-
+# Columbia University, Department of Statistics STAT GU4243 Applied Data Science, Spring, 2018
 ----
+# Project 2: Cat or Dog: Predictive Modelling and Computation Time Optimization
 
 
 ### [Project Description](doc/)
