@@ -93,7 +93,7 @@ color_feature_extraction <- function(img_dir, export = T){
       
     }
     close(pb)
-    color_features <- join(RGB, HSV, by.x = "Image")
+    color_features <- join(RGB, HSV)
     ### output constructed features
     if(export){
       save(color_features, file = "../output/train_feature_color.RData")
