@@ -10,7 +10,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 1. Import the training and test data
+```{r}
+train_color <- load("../data/split_data/train/train_color.Rdata")
+train_HOG <- load("../data/split_data/train/train_HOG.Rdata")
+train_label <- load("../data/split_data/train/train_label.Rdata")
+train_LBP <- load("../data/split_data/train/train_LBP.Rdata")
 
+test_color <- load("../data/split_data/test/test_color.Rdata")
+test_HOG <- load("../data/split_data/test/test_HOG.Rdata")
+test_label <- load("../data/split_data/test/test_label.Rdata")
+test_LBP <- load("../data/split_data/test/test_LBP.Rdata")
+```
 2. Create base "train_rf" function.
 
 3. Run cross validation over parameters = number of trees, anything else? to select best parameters.
@@ -21,7 +31,7 @@ b. Determine best parameters by comparing performance metric.
 
 5. Record the final accuracy and the amount of time needed to construct tree and make predictions.
 
-```{r Train Random Forest}
+```{r Train Random Forest, eval=FALSE, include=FALSE}
 
 library(randomForest)
 
@@ -49,7 +59,7 @@ train_rf = function(dat_train){
 }
 ```
 
-```{r Random Forest Version 2}
+```{r Random Forest Version 2, eval=FALSE, include=FALSE}
 
 
 raw_data <- read.csv('../data/feature.csv',header = F,skip = 1)
