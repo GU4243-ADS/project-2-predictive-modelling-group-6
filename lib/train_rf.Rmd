@@ -1,0 +1,139 @@
+---
+title: "Random Forest"
+author: "Daniel Joseph Parker"
+date: "2/28/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. Import the training and test data from the `/data/` subdirectory in the project structure. This partition is a randomly generated and reproducible 80% - 20% split, as discussed in our group's 2-26-18 meeting.
+
+```{r Import data}
+# Training data:
+# train_color
+# train_HOG
+# train_LBP
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_color.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_HOG.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_LBP.Rdata")
+
+# Training labels:
+# train_label
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_label.Rdata")
+
+# Test data:
+# test_color
+# test_HOG
+# test_LBP
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_color.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_HOG.Rdata")
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_LBP.Rdata")
+
+# Test labels:
+# test_label
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_label.Rdata")
+```
+
+1a. Note that the training and test labels have the same *ordering* as the feature datasets. But the original image numbers have been maintained in the datasets. Because we will build the machine learning model on a combined dataframe including *both* the labels *and* the data, we'll need to replace the rownames, and perform a merge for both the training and test data.
+
+```{r Fix labels and perform training and test merge}
+require(tidyverse, quietly = TRUE) # For the pipeline operator %>%
+
+rownames(train_color) <- 1:1600
+rownames(train_HOG) <- 1:1600
+rownames(train_LBP) <- 1:1600
+
+rownames(test_color) <- 1:400
+rownames(test_HOG) <- 1:400
+rownames(test_LBP) <- 1:400
+```
+
+```{r}
+train_data <-
+  train_label %>%
+#  merge(train_color) %>%
+#  merge(train_HOG) %>%
+  merge(train_LBP, by = 0, sort = FALSE) %>%
+  select(-Row.names) %>%
+  select(-Image)
+```
+
+```{r}
+test_data <-
+  test_label %>%
+#  merge(test_color) %>%
+#  merge(test_HOG) %>%
+  merge(test_LBP, by = 0, sort = FALSE) %>%
+  select(-Row.names) %>%
+  select(-Image)
+# "row.names"
+```
+
+Our data are now ready to generate random forests with!
+
+2. Create the base "train_rf" function.
+
+```{r Random forest generation, eval=FALSE, include=FALSE}
+require(randomForest, quietly = TRUE)
+
+set.seed(1)
+
+train_rf <- function(training_data){
+  # Input: training data. 
+  ## The first column is named "label". "cat" and "dog" are the two levels of this factor.
+  ## The remaining columns are the extracted image features.
+  
+  # Value:
+  ## a random forest object that has been optimized for "mtry",
+  ## the number of randomized features over which to search
+  ## at each step of tree-building.
+  ### Note: this means that this parameter does not need to be searched
+  ### over during cross-validation.
+  
+  response <- training_data$label
+  predictors <- test_data[2:length(test_data)]
+  return(tuneRF(predictors, response, ntreeTry = 500, doBest = TRUE))
+}
+```
+
+To do:
+
+Use the `caret` package to create a concise and readable version of cross validation for RF.
+
+Parameters to think about:
+-Number of trees?
+-Tree depth?
+-`m`, the number of predictors to randomly look at at each treebuilding step
+
+Train final tree with best parameters using train_rf.
+
+Record the final accuracy and the amount of time needed to construct tree and make predictions.
+
+```{r Example caret code from old group - to update, eval=FALSE, include=FALSE}
+
+train_rf = function(dat_train){
+  
+  ###  dat_train: processed features from images also contains label
+  
+  fitControl = trainControl(method = 'cv', number = 2)
+  
+  rfGrid = expand.grid(mtry = floor(sqrt(ncol(dat_train)) * 0.95) : floor(sqrt(ncol(dat_train) * 1.05)))
+  
+  start_time_rf = Sys.time() # Model Start Time 
+  rf.fit = train(Label~., 
+                 data = dat_train,
+                 method = "rf", 
+                 trControl = fitControl,
+                 ntree = 500, #number of trees to grow
+                 tuneGrid = rfGrid) # Parameter Tuning
+  end_time_rf = Sys.time() # Model End time
+  end_time_rf - start_time_rf
+  
+  rf_time = end_time_rf - start_time_rf #Total Running Time
+  
+  return(list(fit = rf.fit, time = rf_time))
+}
+```
