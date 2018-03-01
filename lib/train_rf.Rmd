@@ -1,5 +1,5 @@
 ---
-title: "Random Forest"
+title: "Random Forest Model Training"
 author: "Daniel Joseph Parker"
 date: "2/28/2018"
 output: html_document
@@ -9,9 +9,21 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-1. Import the training and test data from the `/data/` subdirectory in the project structure. This partition is a randomly generated and reproducible 80% - 20% split, as discussed in our group's 2-26-18 meeting.
+# Import training and test data
 
-```{r Import data}
++ Inside the `/data/` subdirectory in the project structure, there are separate folders for training and test data according to a randomly generated, reproducible 80% - 20% split, as discussed in our group's 2-26-18 meeting.
+
++ Within each folder, there are several files:
+++ labels
+++ 3 `.Rdata` files: color features, HOG features, and LBP features.
+
++ Still to incorporate: SIFT features. Currently, these have not yet been split with the others.
+
+```{r Load data}
+# Training labels:
+# train_label
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_label.Rdata")
+
 # Training data:
 # train_color
 # train_HOG
@@ -20,9 +32,9 @@ load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/da
 load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_HOG.Rdata")
 load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_LBP.Rdata")
 
-# Training labels:
-# train_label
-load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/train/train_label.Rdata")
+# Test labels:
+# test_label
+load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_label.Rdata")
 
 # Test data:
 # test_color
@@ -31,17 +43,22 @@ load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/da
 load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_color.Rdata")
 load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_HOG.Rdata")
 load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_LBP.Rdata")
-
-# Test labels:
-# test_label
-load("/Users/djparker/Documents/GitHub/project-2-predictive-modelling-group-6/data/split_data/test/test_label.Rdata")
 ```
 
-1a. Note that the training and test labels have the same *ordering* as the feature datasets. But the original image numbers have been maintained in the datasets. Because we will build the machine learning model on a combined dataframe including *both* the labels *and* the data, we'll need to replace the rownames, and perform a merge for both the training and test data.
+# Data preprocessing
 
-```{r Fix labels and perform training and test merge}
-require(tidyverse, quietly = TRUE) # For the pipeline operator %>%
+To tune and train the random forest model, we will need to preprocess the training and test data such that the adhere to the following form:
 
++ Row names: consistent row numbers each corresponding to the same image
++ 1st column: the labels! ("cat", "dog")
++ 2nd column: retain original image name (in case refering to the original image becomes important)
++ The remainder of the dataframe is the numerical features. These are the predictors we'll build the model on.
+
+## Row names
+
+The row names pre-randomized split are still intact, so first we replace the row names. (Upon inspection, we can see that the labels have the same *ordering* as the feature datasets; thus, this step is justified.)
+
+```{r Row name concordance between labels and features}
 rownames(train_color) <- 1:1600
 rownames(train_HOG) <- 1:1600
 rownames(train_LBP) <- 1:1600
@@ -51,89 +68,96 @@ rownames(test_HOG) <- 1:400
 rownames(test_LBP) <- 1:400
 ```
 
-```{r}
-train_data <-
-  train_label %>%
-#  merge(train_color) %>%
-#  merge(train_HOG) %>%
-  merge(train_LBP, by = 0, sort = FALSE) %>%
-  select(-Row.names) %>%
+## Image names
+
+Each feature dataframe has the original image names as its first column. We only need to retain one. So we'll delete this column from 2 of the 3 feature dataframes. (Arbitrarily, we'll keep that column in the `LBP` dataframes, and put that first in line for merging.)
+
+```{r Retain only one image name column}
+require(tidyverse, quietly = TRUE) # For the pipeline operator %>%
+
+train_HOG <-
+  train_HOG %>%
+  select(-Image)
+
+train_color <-
+  train_color %>%
+  select(-Image)
+
+test_HOG <-
+  test_HOG %>%
+  select(-Image)
+
+test_color <-
+  test_color %>%
   select(-Image)
 ```
 
+## Merge!
+
+This step produces `train_data`, the final input into the model building function. It has the form described in the top of this section.
+
 ```{r}
-test_data <-
-  test_label %>%
-#  merge(test_color) %>%
-#  merge(test_HOG) %>%
-  merge(test_LBP, by = 0, sort = FALSE) %>%
-  select(-Row.names) %>%
-  select(-Image)
-# "row.names"
+train_data <- cbind(train_label, train_LBP, train_HOG, train_color)
+test_data <- cbind(test_label, test_LBP, test_HOG, test_color)
 ```
 
 Our data are now ready to generate random forests with!
 
-2. Create the base "train_rf" function.
+# Train the optimum random forest model
 
-```{r Random forest generation, eval=FALSE, include=FALSE}
+## Parameter tuning
+
+To write: description of how the `caret` package is used here to find optimal model.
+```{r}
+require(caret, quietly = TRUE)
 require(randomForest, quietly = TRUE)
 
-set.seed(1)
+# This set-up draws from https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
+control <- trainControl(method = "repeatedcv",
+                        number = 10,
+                        repeats = 3,
+                        search = "random")
 
-train_rf <- function(training_data){
-  # Input: training data. 
-  ## The first column is named "label". "cat" and "dog" are the two levels of this factor.
-  ## The remaining columns are the extracted image features.
-  
-  # Value:
-  ## a random forest object that has been optimized for "mtry",
-  ## the number of randomized features over which to search
-  ## at each step of tree-building.
-  ### Note: this means that this parameter does not need to be searched
-  ### over during cross-validation.
-  
-  response <- training_data$label
-  predictors <- test_data[2:length(test_data)]
-  return(tuneRF(predictors, response, ntreeTry = 500, doBest = TRUE))
+seed = 1
+set.seed(seed)
+
+# This is the computationally intensive step.
+start_time = Sys.time()
+rf <- train(label ~ .,
+            data = train_data[-Image],
+            method = "rf",
+            tuneLength = 15,
+            ntree = 500,
+            trControl = control)
+end_time = Sys.time()
+build_time = end_time - start_time
 }
+
+# When run, this code should show the accuracy.
 ```
 
-To do:
+## Save the model
 
-Use the `caret` package to create a concise and readable version of cross validation for RF.
+```{r Save model}
+# To write:
+# Save the object to /output/ folder
+```
 
-Parameters to think about:
--Number of trees?
--Tree depth?
--`m`, the number of predictors to randomly look at at each treebuilding step
+# Alternate
 
-Train final tree with best parameters using train_rf.
+```{r Random forest generation, eval=FALSE, include=TRUE}
+# This is an alternate version of optimizing the random forest
+# that uses the built-in `tuneRF` function in the 
+# `randomForest` package to optimize the `mtry` paramter,
+# which is the most important parameter to search over in random forests.
 
-Record the final accuracy and the amount of time needed to construct tree and make predictions.
+require(randomForest, quietly = TRUE)
 
-```{r Example caret code from old group - to update, eval=FALSE, include=FALSE}
+seed = 1
+set.seed(seed)
 
-train_rf = function(dat_train){
-  
-  ###  dat_train: processed features from images also contains label
-  
-  fitControl = trainControl(method = 'cv', number = 2)
-  
-  rfGrid = expand.grid(mtry = floor(sqrt(ncol(dat_train)) * 0.95) : floor(sqrt(ncol(dat_train) * 1.05)))
-  
-  start_time_rf = Sys.time() # Model Start Time 
-  rf.fit = train(Label~., 
-                 data = dat_train,
-                 method = "rf", 
-                 trControl = fitControl,
-                 ntree = 500, #number of trees to grow
-                 tuneGrid = rfGrid) # Parameter Tuning
-  end_time_rf = Sys.time() # Model End time
-  end_time_rf - start_time_rf
-  
-  rf_time = end_time_rf - start_time_rf #Total Running Time
-  
-  return(list(fit = rf.fit, time = rf_time))
-}
+response <- training_data$label
+predictors <- training_data[3:length(training_data)]
+
+rf_alternate <- tuneRF(predictors, response, ntreeTry = 500, doBest = TRUE))
 ```
