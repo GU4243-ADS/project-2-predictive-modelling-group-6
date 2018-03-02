@@ -2,36 +2,67 @@
 ### Train a classification model with training images ###
 #########################################################
 
-### Author: Yuting Ma
-### Project 3
-### ADS Spring 2016
+### Author: Wanting Cheng
+### Project 2
+### ADS Spring 2018
 
 
-train <- function(dat_train, label_train, par = NULL){
+train <- function(train_data, run.RF = F,run.TF = F,run.GBM = F, export = T){
   
-  ### Train a Gradient Boosting Model (GBM) using processed features from training images
-  
+
   ### Input: 
-  ###  -  processed features from images 
-  ###  -  class labels for training images
+  ###  -  processed features from images with labels
   ### Output: training model specification
   
   ### load libraries
   library("gbm")
   
   ### Train with gradient boosting model
-  if(is.null(par)){
-    depth <- 3
-  } else {
-    depth <- par$depth
+  if(run.RF){
+    RF_model <- RF(train_data)
+    return(RF_model)
   }
-  fit_gbm <- gbm.fit(x = dat_train, y = label_train,
-                     n.trees = 2000,
-                     distribution = "bernoulli",
-                     interaction.depth = depth, 
-                     bag.fraction = 0.5,
-                     verbose = FALSE)
-  best_iter <- gbm.perf(fit_gbm, method = "OOB", plot.it = FALSE)
+  if(run.tf){
+    TF_model <- TF(train_data)
+    return(TF_model)
+  }
+  if(run.GBM){
+    GBM_model <- GBM(train_data)
+    return(GBM_model)
+  }
 
-  return(list(fit = fit_gbm, iter = best_iter))
+  RF <- function(train_data){
+  
+    require(randomForest, quietly = TRUE)
+    
+    seed = 1
+    set.seed(seed)
+    
+    response <- train_data$label
+    predictors <- train_data[3:length(train_data)]
+    
+    rf_model <- tuneRF(predictors, response, ntreeTry = 500, doBest = TRUE)
+    save(rf_model, file = "../output/rf_model.Rdata")
+    return(rf_model)
+    
+    }
+
+  TF <- function(train_data){
+    
+    save(tf_model, file = "../output/tf_model.Rdata")
+    return(TF_model)
+  }
+  
+  GBM <- function(train_data){
+    
+    save(gbm_model, file = "../output/gbm_model.Rdata")
+    return(GBM_model)
+  }
+
 }
+
+getwd()
+load("../data/split_data/train/train_data.Rdata")
+RF_model <- train(train_data, run.RF = T)
+
+
