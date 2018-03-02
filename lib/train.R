@@ -16,20 +16,6 @@ train <- function(train_data, run.RF = F,run.TF = F,run.GBM = F, export = T){
   
   ### load libraries
   library("gbm")
-  
-  ### Train with gradient boosting model
-  if(run.RF){
-    RF_model <- RF(train_data)
-    return(RF_model)
-  }
-  if(run.tf){
-    TF_model <- TF(train_data)
-    return(TF_model)
-  }
-  if(run.GBM){
-    GBM_model <- GBM(train_data)
-    return(GBM_model)
-  }
 
   RF <- function(train_data){
   
@@ -42,7 +28,9 @@ train <- function(train_data, run.RF = F,run.TF = F,run.GBM = F, export = T){
     predictors <- train_data[3:length(train_data)]
     
     rf_model <- tuneRF(predictors, response, ntreeTry = 500, doBest = TRUE)
-    save(rf_model, file = "../output/rf_model.Rdata")
+    if(export){
+      save(rf_model, file = "../output/rf_model.Rdata")
+    }
     return(rf_model)
     
     }
@@ -59,9 +47,21 @@ train <- function(train_data, run.RF = F,run.TF = F,run.GBM = F, export = T){
     return(GBM_model)
   }
 
-}
+  ### Train with selected model
+  if(run.RF){
+    RF_model <- RF(train_data)
+    return(RF_model)
+  }
+  if(run.tf){
+    TF_model <- TF(train_data)
+    return(TF_model)
+  }
+  if(run.GBM){
+    GBM_model <- GBM(train_data)
+    return(GBM_model)
+  }
 
-getwd()
+}
 load("../data/split_data/train/train_data.Rdata")
 RF_model <- train(train_data, run.RF = T)
 
