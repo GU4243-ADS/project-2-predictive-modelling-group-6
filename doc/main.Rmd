@@ -61,7 +61,14 @@ run.Ada = F
 run.XGB = T
 ```
 
-After discussion and several tryouts, we decided to cross validate within each train function (since different models have different function to cross validate most efficiently).
+
+```{r}
+K = 5
+gbm_model_values<-seq(0.01,0.25,0.05)
+
+svm_gamma_values <- seq(0, 0.5, by = 0.1)
+
+```
 
 
 ### Step 2: Import training images class labels.
@@ -104,10 +111,10 @@ if(run.feature.test){
   load("../data/split_data/test/test_data.Rdata")
 }
 
-load("../data/split_data/train/train_color.Rdata")
-load("../data/split_data/test/test_color.Rdata")
-train_data <- train_color[,-1]
-test_data <- test_color[,-1]
+load("../data/split_data/train/train_HOG.Rdata")
+load("../data/split_data/test/test_HOG.Rdata")
+train_HOG <- train_HOG[,-1]
+test_HOG <- test_HOG[,-1]
 
 
 
@@ -130,11 +137,38 @@ Call the train model and test model from library.
 ```{r loadlib}
 source("../lib/train.R")
 source("../lib/test.R")
+source("../lib/cross_validation.R")
 ```
 
 #### Model selection with cross-validation
 
 * Do model selection.  Here we choose between model parameters, in this case the interaction depth for GBM. 
+
+```{r}
+if( cv.svm ){
+    
+  err_cv <- array(dim=c(length(svm_gamma_values), 2))
+  
+  
+   for(k in 1:length(svm_gamma_values)){
+    cat("k=", k, "\n")
+     err_cv[k,] <- cv.function(train_HOG, train_label, d = svm_gamma_values[k], K = K, cv.svm = T)
+   }
+}
+if( cv.gbm ){
+    
+  err_cv <- array(dim=c(length(gbm_model_values), 2))
+  
+   for(k in 1:length(gbm_gamma_values)){
+    cat("k=", k, "\n")
+     k = 1
+     err_cv[k,] <- cv.function(train_data, train_label, d = gbm_model_values[k], K = K, cv.svm = T)
+   }
+}
+
+
+```
+
 
 ```{r runcv, message=FALSE, warning=FALSE}
 tm_train <- NA
