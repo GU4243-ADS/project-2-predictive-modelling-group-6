@@ -25,10 +25,10 @@ set.seed(2018)
 # Here we run the k-means algorithm to determine
 # the number of features we are generalizing
 # the SIFT key-points into
-# library('class')
-# load('sift_combined.RData')
-# k = 30
-# km <- kmeans(data, k, algorithm = 'MacQueen', nstart = 10, iter.max = 30)
+library('class')
+load('sift_combined.RData')
+k = 200
+km <- kmeans(data, k, algorithm = 'MacQueen', nstart = 5, iter.max = 20)
 save(km, file='sift_feature_kmeans_model.RData')
 
 # For each image, classify each sift key-point and compile
@@ -65,4 +65,6 @@ sift.data <- as.data.frame(as.matrix(doc.term.mat))
 # to have L2 norm 1
 norm <- apply(sift.data, 1, function(x) sqrt(sum(x^2)))
 sift.data <- sift.data / norm
-save(sift.data, file='sift_features_30.RData')
+out.data <- data.frame()
+out.path.template <- 'sift_features_%d.RData'
+save(sift.data, file=sprintf(out.path.template, k))
