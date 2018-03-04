@@ -237,6 +237,9 @@ prob <-  model %>% predict_proba(trainx2)
   
 ```
 
+
+
+
 ```{r}
 # model testing
 
@@ -249,7 +252,7 @@ pred <- model%>%predict_classes(testx2)
 
 
 ```{r}
-load("../output/sift_features_k3.RData")
+load("../output/sift_features_30.RData")
 ```
 
 
@@ -262,20 +265,22 @@ y_train <- mnist$train$y
 x_test <- mnist$test$x
 y_test <- mnist$test$y
 
-train_total <- merge(train_color,train_HOG,by=c("Image"))
+train_total <- merge(train_LBP,train_HOG,by=c("Image"))
 train_total <- merge(train_total,train_LBP,by=c("Image"))
 
-train_total <- sift.train.data
-train_label <- read.table("../output/train_label.txt")
+str(sift.data)
+train_total <- train_HOG
+train_total <- train_LBP
+#train_label <- read.table("../output/train_label.txt")
 
-trainx <- train_total[1:nrow(train_total),1:ncol(train_total)]
+trainx <- train_total[1:nrow(train_total),2:ncol(train_total)]
 trainx <- data.matrix(trainx, rownames.force = NA)
 trainx <- unname(trainx, force = FALSE)
 
 
 trainy <- list()
 for (i in 1:nrow(train_label)) {
-  if (train_label$V1[i]=="dog"){
+  if (train_label$label[i]=="dog"){
     trainy[i] <-1
   }
   else{
@@ -321,7 +326,7 @@ trainy <- to_categorical(trainy, 2)
 
 model <- keras_model_sequential() 
 model %>% 
-  layer_dense(units = 256, activation = 'relu', input_shape = c(3)) %>% 
+  layer_dense(units = 256, activation = 'relu', input_shape = c(1764)) %>% 
   layer_dropout(rate = 0.4) %>% 
   layer_dense(units = 128, activation = 'relu') %>%
   layer_dropout(rate = 0.3) %>%
@@ -334,13 +339,27 @@ model %>% compile(
   metrics = c('accuracy')
 )
 
+
+
 history <- model %>% fit(
   trainx, trainy, 
   epochs = 30, batch_size = 128, 
   validation_split = 0.2
 )
 
+
 model %>% evaluate(x_test, y_test)
 
+```
+```{r}
+library(caret)
+# load the iris dataset
+
+# define training control
+train_control <- trainControl(method="repeatedcv", number=10, repeats=3)
+# train the model
+model <- train(Species~., data=train_total, trControl=train_control, method="nn")
+# summarize results
+print(model)
 ```
 
