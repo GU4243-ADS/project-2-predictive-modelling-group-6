@@ -117,7 +117,7 @@ for (i in 1:nrow(train_label)) {
     trainy1[i] <-1
   }
   else{
-    trainy1[i] <-0
+    trainy1[i] <- 0
   }
 }
 
@@ -127,8 +127,7 @@ for (i in 1:nrow(test_label)) {
     testy1[i] <-1
   }
   else{
-    testy1[i] <-0
-  }
+    testy1[i] <- 0  }
 }
 #Create data is a 3-d array of grayscale values. To prepare data fro training, it has to convert the 3-d arrays into matrices by reshapinf width dand heights into a single dimension. Then convert the grayscale values from integers ranging between 0 to 255 into floating point value between 0 to 1.
 
@@ -163,8 +162,8 @@ total[1:10,1:10]
 ```{r}
 #One Hot Encoding
 trainlabels <- to_categorical(trainy1)
-testlabels <- to_categorical(testy1)
-n <- ncol(trainx1)
+#testlabels <- to_categorical(testy1)
+n <- ncol(trainx2)
 
 #Create the model (where to recreate the model)
 # the simplest type of model is the sequential model, a linear stack of layers. 
@@ -174,10 +173,11 @@ model <- keras_model_sequential()
 model %>%
   layer_dense(units= 256, activation = "relu", input_shape = c(n)) %>%
   layer_dropout(rate = 0.4) %>%
-  layer_dense(units= 256, activation = "relu") %>%
+#  layer_dense(units= 512, activation = "relu",use_bias = T) %>%
   layer_dense(units= 128, activation = "relu") %>%
-#  layer_dropout(rate = 0.3) %>%
-  layer_dense(units= 2, activation = "sigmoid")
+  layer_dropout(rate = 0.3) %>%  
+  layer_dense(units= 10, activation = "relu",use_bias = T) %>%
+
 
 # The final layer outputs is binary by using softmax activation function.
 # can chang ethe activation fucntion such as sigmoid
@@ -187,8 +187,8 @@ summary(model)
 # Compile 
 # The model with approriate loss function, optimizer and metrics
 model %>%
-  compile(loss ='binary_crossentropy',
-          optimizer = "sgd",
+  compile(loss ='categorical_crossentropy',
+          optimizer = optimizer_rmsprop(),
           metrics = c("accuracy"))
 
 #optimizer_rmsprop(),
@@ -211,9 +211,10 @@ model %>%
 history <- model %>%
   fit(trainx2, 
       trainlabels,
-      epochs = 30, 
+      epochs = 20, 
       batch_size = 32,
-      validation_split = 0.2) #20% data used for training
+      validation_split = 0.2)
+#      validation_data = list(testx2, testlabels)) 
 
 
 # Training visualization
@@ -227,12 +228,12 @@ plot(history)
 
 ```{r}
 #model evalutaion
-
+saveRDS(model, "model.rds")
 model %>% evaluate(trainx2,trainlabels)
 pred <- model %>% predict_classes(trainx2)
 #table(Predict = pred, Actual = trainy1)
 prob <-  model %>% predict_proba(trainx2)
-cbind(prob, Predict=pred, Actual=trainy1)
+#cbind(prob, Predict=pred, Actual=trainy1)
   
 ```
 
@@ -247,8 +248,99 @@ pred <- model%>%predict_classes(testx2)
 
 
 
+```{r}
+load("../output/sift_features_k3.RData")
+```
 
 
 
 
+```{r}
+mnist <- dataset_mnist()
+x_train <- mnist$train$x
+y_train <- mnist$train$y
+x_test <- mnist$test$x
+y_test <- mnist$test$y
+
+train_total <- merge(train_color,train_HOG,by=c("Image"))
+train_total <- merge(train_total,train_LBP,by=c("Image"))
+
+train_total <- sift.train.data
+train_label <- read.table("../output/train_label.txt")
+
+trainx <- train_total[1:nrow(train_total),1:ncol(train_total)]
+trainx <- data.matrix(trainx, rownames.force = NA)
+trainx <- unname(trainx, force = FALSE)
+
+
+trainy <- list()
+for (i in 1:nrow(train_label)) {
+  if (train_label$V1[i]=="dog"){
+    trainy[i] <-1
+  }
+  else{
+    trainy[i] <- 0
+  }
+}
+
+testy <- list()
+for (i in 1:nrow(test_label)) {
+  if (test_label$label[i]=="dog"){
+    testy[i] <-1
+  }
+  else{
+    testy[i] <- 0  }
+}
+
+```
+
+
+
+```{r}
+x_train <- array_reshape(x_train, c(nrow(x_train), 784))
+x_test <- array_reshape(x_test, c(nrow(x_test), 784))
+# rescale
+x_train <- x_train / 255
+x_test <- x_test / 255
+
+
+
+
+```
+
+
+```{r}
+
+
+y_train <- to_categorical(y_train, 10)
+y_test <- to_categorical(y_test, 10)
+
+trainy <- to_categorical(trainy, 2)
+
+
+
+model <- keras_model_sequential() 
+model %>% 
+  layer_dense(units = 256, activation = 'relu', input_shape = c(3)) %>% 
+  layer_dropout(rate = 0.4) %>% 
+  layer_dense(units = 128, activation = 'relu') %>%
+  layer_dropout(rate = 0.3) %>%
+  layer_dense(units = 2, activation = 'softmax')
+
+
+model %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+
+history <- model %>% fit(
+  trainx, trainy, 
+  epochs = 30, batch_size = 128, 
+  validation_split = 0.2
+)
+
+model %>% evaluate(x_test, y_test)
+
+```
 
