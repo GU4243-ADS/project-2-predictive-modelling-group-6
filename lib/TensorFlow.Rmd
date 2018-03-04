@@ -28,7 +28,7 @@ library(reticulate)
 library(EBImage)
 library(tensorflow)
 library(keras)
-
+library(caret)
 ```
 
 ```{r}
@@ -54,7 +54,7 @@ load("../data/split_data/test/test_LBP.RData")
 
 
 ID <- list(1:2000)
-label <- read.table("../data/pets_training/pets/train_label.txt")
+label <- read.table("../output/train_label_11.txt")
 
 imgdata <- data.frame(ID,label)
 s1 <- "pet"
@@ -271,16 +271,22 @@ train_total <- merge(train_total,train_LBP,by=c("Image"))
 str(sift.data)
 train_total <- train_HOG
 train_total <- train_LBP
-#train_label <- read.table("../output/train_label.txt")
+train_label <- read.table("../output/train_label.txt")
 
-trainx <- train_total[1:nrow(train_total),2:ncol(train_total)]
+load("../output/sift_features_200.RData")
+
+load("../output/feature_HOG_rotate.RData")
+train_total <- dat
+
+
+trainx <- train_total[1:nrow(train_total),1:ncol(train_total)]
 trainx <- data.matrix(trainx, rownames.force = NA)
 trainx <- unname(trainx, force = FALSE)
 
 
 trainy <- list()
 for (i in 1:nrow(train_label)) {
-  if (train_label$label[i]=="dog"){
+  if (train_label$V1[i]=="dog"){
     trainy[i] <-1
   }
   else{
@@ -317,10 +323,48 @@ x_test <- x_test / 255
 ```{r}
 
 
-y_train <- to_categorical(y_train, 10)
-y_test <- to_categorical(y_test, 10)
+#y_train <- to_categorical(y_train, 10)
+#y_test <- to_categorical(y_test, 10)
+
+
+#trainy <- to_categorical(trainy, 2)
+trainx1 <- rbind(trainx[1:1000,],trainx[1401:2000,])
+trainy1 <- rbind(trainy[1:1000,],trainy[1401:2000,])
+testx1 <- trainx[1001:1400,]
+testy1 <- trainy[1001:1400,]
+
+k = 10
+cross = data.frame(loss=1:10,acc=1:10,testloss=1:10,testacc=1:10)
+
+
+pptrainy<-trainy
+trainy<-pptrainy
 
 trainy <- to_categorical(trainy, 2)
+trainy <- trainy[,2]
+trainy <- as.data.frame(trainy)
+trainy <- rbind(trainy,trainy,trainy,trainy)
+trainy1 <- trainy
+train_total1 <- cbind(trainy1,train_total)
+
+
+
+for (i in 1:10) {
+  
+  
+train.index <- createDataPartition(train_total1$trainy, p = .8, list = FALSE)
+trainx1 <- train_total1[ train.index,2:1765]
+trainy1 <- train_total1[train.index,1]
+testx1  <- train_total1[-train.index,2:1765]
+testy1  <- train_total1[-train.index,1]
+
+trainx1 <- data.matrix(trainx1, rownames.force = NA)
+trainx1 <- unname(trainx1, force = FALSE)
+testx1 <- data.matrix(testx1, rownames.force = NA)
+testx1 <- unname(testx1, force = FALSE)
+
+trainy1 <- to_categorical(trainy1, 2)
+testy1 <- to_categorical(testy1, 2)
 
 
 
@@ -328,6 +372,8 @@ model <- keras_model_sequential()
 model %>% 
   layer_dense(units = 256, activation = 'relu', input_shape = c(1764)) %>% 
   layer_dropout(rate = 0.4) %>% 
+  layer_dense(units = 256, activation = 'relu') %>%
+  layer_dropout(rate = 0.3) %>%
   layer_dense(units = 128, activation = 'relu') %>%
   layer_dropout(rate = 0.3) %>%
   layer_dense(units = 2, activation = 'softmax')
@@ -339,27 +385,59 @@ model %>% compile(
   metrics = c('accuracy')
 )
 
+ss
+  
+  history <- model %>% fit(
+   trainx1, trainy1, 
+   epochs = 50, batch_size = 50 
+  # validation_split = 0.2
+  )
+  acc <- model %>% evaluate(trainx1,trainy1)
+  
+  testacc <- model %>% evaluate(testx1, testy1)
+  
+  cross$loss[i] <- acc$loss
+  cross$acc[i] <- acc$acc
+  cross$testloss[i] <- testacc$loss
+  cross$testacc[i] <- testacc$acc
+ rm(model)
+}
 
+pred <- model %>% predict_classes(trainx)
 
-history <- model %>% fit(
-  trainx, trainy, 
-  epochs = 30, batch_size = 128, 
-  validation_split = 0.2
-)
-
-
-model %>% evaluate(x_test, y_test)
 
 ```
+
+
 ```{r}
-library(caret)
-# load the iris dataset
+  
 
-# define training control
-train_control <- trainControl(method="repeatedcv", number=10, repeats=3)
-# train the model
-model <- train(Species~., data=train_total, trControl=train_control, method="nn")
-# summarize results
-print(model)
+k = 200
+cross = data.frame(loss=1:200,acc=1:200,testloss=1:200,testacc=1:200)
+
+for (i in 20:200) {
+  
+history <- model %>% fit(
+   trainx1, trainy1, 
+   epochs = 60, batch_size = 50 
+  # validation_split = 0.2
+  )
+  acc <- model %>% evaluate(trainx,trainy)
+  
+  testacc <- model %>% evaluate(testx1, testy1)
+  
+  cross$loss[i] <- acc$loss
+  cross$acc[i] <- acc$acc
+  cross$testloss[i] <- testacc$loss
+  cross$testacc[i] <- testacc$acc
+}
+
+t<-cross[20:90,]
+p1 <- ggplot(t, aes(x = 20:90, y = testacc))+
+  geom_line()
 ```
+
+
+
+
 
