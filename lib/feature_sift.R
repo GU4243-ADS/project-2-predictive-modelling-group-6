@@ -1,7 +1,15 @@
 # This RScript generates 30 SIFT features from the provided data file
-library('dplyr')
-library('magrittr')
 
+required.packages <- c('class', 'text2vec', 'data.table')
+absent.packages <- setdiff(required.packages,
+                           intersect(installed.packages()[,1],
+                                     required.packages))
+# Install additional packages
+if (length(absent.packages) > 0){
+  install.packages(absent.packages, dependencies = TRUE)
+}
+
+# library('dplyr')
 # Random seed for uniform reproduction
 set.seed(2018)
 
@@ -25,22 +33,31 @@ set.seed(2018)
 # Here we run the k-means algorithm to determine
 # the number of features we are generalizing
 # the SIFT key-points into
+
 library('class')
-load('sift_combined.RData')
+# load('sift_combined.RData')
 k = 200
-km <- kmeans(data, k, algorithm = 'MacQueen', nstart = 5, iter.max = 20)
-save(km, file='sift_feature_kmeans_model.RData')
+# km <- kmeans(data, k, algorithm = 'MacQueen', 
+#              nstart = 5, iter.max = 20)
+
+# Save k-means model
+km.filename.template = '../output/sift_feature_kmeans_model_%d.RData'
+km.filename = sprintf(km.filename.template, k)
+# save(km, file=sprintf(model.name.template, k))
+
+load(km.filename)
 
 # For each image, classify each sift key-point and compile
 # them into a list 
-file.name.template <- 'pet%i'
-data.path.template <- 'train-features/%s.jpg.sift.Rdata'
+data.path <- 'train-features/' # Change here for image data path
+image.name.template <- 'pet%i.jpg.sift.Rdata' # Change here for 
+                                              # filename template
 n.images <- 2000
 image.names <- vector(mode='list', length=n.images)
 sift.tokens <- vector(mode='list', length=n.images)
+file.name.template <- paste(data.path, image.name.template, sep='')
 for (i in 1:n.images){
-  file.name <- sprintf(file.name.template, i)
-  sift <- load(sprintf(data.path.template, file.name))
+  load(sprintf(file.name.template, i))
   cluster_labels = knn(km$centers, features, 1:k)
   image.names[[i]] = file.name
   sift.tokens[[i]] = cluster_labels
@@ -67,4 +84,6 @@ norm <- apply(sift.data, 1, function(x) sqrt(sum(x^2)))
 sift.data <- sift.data / norm
 out.data <- data.frame()
 out.path.template <- 'sift_features_%d.RData'
-save(sift.data, file=sprintf(out.path.template, k))
+out.filename <- sprintf(out.path.template, k)
+save(sift.data, file=out.filename)
+print(sprintf('SIFT features saved at %s', out.filename))
