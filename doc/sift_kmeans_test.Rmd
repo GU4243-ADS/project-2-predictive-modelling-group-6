@@ -1,0 +1,67 @@
+---
+title: "Optimal k in k-means for SIFT Feature Extraction"
+output: html_notebook
+---
+
+## Motivation
+
+The usual approach to employ SIFT features in image classification is the bag-of-words approach. SIFT key-points from all images are clustered using k-means algorithm. Then, each key-point is assigned the class it has been clustered to. After this operation, each image will contain a list of classes its SIFT key-points belong to. If we treat each class of key-point as a "word", then we can essentially create a histogram of classes for every image, so-called "bag-of-words" in the NLP context. Once we standardize the histogram, we get a feature vector that summarizes the image 
+
+The choice of k is important because it needs to balance descriptivity and parsimony. On one hand, it needs to differentiate between different types of key-points reasonably well. On the other hand, it shouldn't over-differentiate either. In this R Notebook, we examine the performance of k-means algorithm on the provided SIFT features given different values of k. 
+
+```{r}
+# Check and install dependencies
+require('BLR')
+require('parallel')
+```
+
+Choice of algorithm:
+https://stackoverflow.com/questions/20446053/k-means-lloyd-forgy-macqueen-hartigan-wong
+
+```{r}
+library(parallel)
+library(BLR)
+
+#load('sift_combined.RData')
+
+# Run different k's on different processors
+#num.cores = 7
+#K = c(5, 10, 15, 20, 25, 30, 50, 100, 200, 500, 1000)
+#mc = mclapply(K, function(x,centers) kmeans(x, centers, algorithm = 'MacQueen', #nstart = 5, iter.max = 20), x=data, mc.cores=num.cores)
+
+#save(mc, file='multicore_kmeans.RData')
+```
+
+## Analysis and Rationale
+
+To find an optimal $k$, we examine their corresponding "Total Within Sum of Squares", which is a summary of total intra-cluster variance. This measure should decrease as $k$ increases. But when there is a point where the decrease of this measure becomes much slower than before, it suggests that the descriptiveness of $k$ plateaus beginning from this value, and increasing $k$ can only add to overfitting.
+
+```{r}
+load('../output/multicore_kmeans.RData')
+#load('multicore_kmeans.RData')
+k <- vector(mode = 'list', length = length(mc))
+tw <- vector(mode = 'list', length = length(mc))
+for (i in 1:length(mc)){
+  k[i] = length(mc[[i]]$centers[,1])
+  tw[i] = mc[[i]]$tot.withinss
+}
+
+total.within.ss = as.numeric(unlist(tw))
+k = as.numeric(unlist(k))
+plot(total.within.ss ~ k, type='b', lty=1)
+```
+
+We can see here that total within SS (TWSS) decreases at a slowing rate as $k$ increases. In particular, after the initial points the decrease in speed of slowing-down becomes especially fast. 
+
+In the figure below, $k$ is log-transformed, leaving us a much straighter curve. The blue line is the regression line on the first 6 points, and the red line is the regression line of the latter 6 points. We can see that while each line fits the data points fairly well (not perfectly since apparent $k$ needs more transformation), the two lines are obviously different. Therefore, the 6th point may be the best point for descriptiveness, i.e. $k=30$. 
+
+```{r}
+plot(tw_num ~ log(k_num), type='b', lty=1)
+pivot_idx = 6
+abline(lm(tw_num[1:pivot_idx] ~ log(k_num[1:pivot_idx])), col='blue')
+abline(lm(tw_num[pivot_idx:length(tw_num)] ~
+            log(k_num[pivot_idx:length(k_num)])), col='red')
+```
+
+However, we should also notice that TWSS also reduced by 50% from $k=30$ to $k=200$. While for interpretability, $k=30$ may be a good choice, for prediction accuracy, we go with $k=200$ this time. 
+
