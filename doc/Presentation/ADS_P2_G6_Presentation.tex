@@ -16,28 +16,7 @@
     draw=black, 
     fill=red!30
     },
-  process/.style={
-    rectangle, 
-    minimum width=3cm, 
-    minimum height=1cm, 
-    align=center, 
-    draw=black, 
-    fill=blue!30
-    },
-  decision/.style={
-    rectangle, 
-    minimum width=3cm, 
-    minimum height=1cm, align=center, 
-    draw=black, 
-    fill=green!30
-    },
-  arrow/.style={thick,->,>=stealth},
-  dec/.style={
-    ellipse, 
-    align=center, 
-    draw=black, 
-    fill=green!30
-    },
+  arrow/.style={thick,->,>=stealth}
 }
 
 \title{Cat or Dog: Predictive Modeling}
@@ -144,34 +123,66 @@
 }
 \section{Results}
 \frame{
+	\frametitle{Results}
 	\includegraphics[width=\linewidth, height=\textheight,keepaspectratio]{../../../../../Downloads/predictiveprogram.png}
 }
+
 \frame{
-	\frametitle{Training Cost}
-	Computation time and memory use for:
-	1. Feature extraction
-	2. Model training
-% Table including the information that's been determined
+	\frametitle{Feature extraction time}
+	\begin{table}
+	\begin{tabular}{r | c | c | c }
+	Feature type & Color & HOG & LBP \\ 
+	\hline
+	Time (m) & 7 & 5 & 20
+	\end{tabular}
+	\caption{Image processing time by feature, in minutes}
+	\end{table}
 }
 
 \frame{
-	\frametitle{Test / Use Cost}
-	Computation time for:
-	1. Feature extraction 
-	2. Classification
-% Table including the information that's been determined
+	\frametitle{Training Times---Computational Cost}
+	\begin{table}
+	\begin{tabular}{r | c | c | c | c}
+	
+	Model & SIFT & Color & HOG & LBP \\
+	\hline
+	GBM & 13.452 & 89.036 & 116.964 & 2.74\\ 
+	RF & 174.1 & 905.883 & 1999.23 & 24.842\\
+	NN & 31 & 65.81 & 61.58 & 28.12 \\
+	SVM  & 3.484 & & 33.099 & 0.805\\  
+	XGBoost & 3.829 & 16.851 & 27.005 & 1.67 \\ 
+	AdaBoost & 16.34 & 103.61 & 142.45 & 3.25
+	
+	\end{tabular}
+	\caption{Training time per model, in seconds}
+	\end{table}
 }
 
 \frame{
-	\frametitle{Accuracy}
-% Table including the information that's been determined
+	\frametitle{Prediction Accuracy}
+	\begin{table}
+	\begin{tabular}{r | c | c | c | c}
+	
+	Model & SIFT & Color & HOG & LBP \\
+	\hline
+	GBM & 73.25 & 69.5 & 75.25 & 69.\\
+	RF & 72.25 & 73. & 74.25 & 69.\\
+	NN & 75.75 & 64.5 & 76.75 & 69.\\
+	SVM & 77.5 & & 77.5 & 69.75\\
+	XGBoost  & 72 & 72 & 77.25 & 66.5\\
+	AdaBoost & 72.75 & 69.5 & 71.75 & 69.75
+	
+	\end{tabular}
+	\caption{Prediction accuracy by model, in percentage}
+	\end{table}
 }
-\frame{
-	\frametitle{Comparison}
-% ggplot visualization scatterplot: 
-%% x axis: time to make prediction
-%% y axis: accuracy in percentage
-}
+
+%\frame{
+%	\frametitle{Comparison}
+%% ggplot visualization scatterplot: 
+%%% x axis: time to make prediction
+%%% y axis: accuracy in percentage
+%}
 
 \section{Discussion}
 \frame{

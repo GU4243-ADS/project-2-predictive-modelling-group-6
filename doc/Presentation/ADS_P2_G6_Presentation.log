@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  5 MAR 2018 11:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  5 MAR 2018 14:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -775,20 +775,20 @@ File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.1a (rcs-revision 1.7)
 )) (./ADS_P2_G6_Presentation.aux)
 \openout1 = `ADS_P2_G6_Presentation.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -856,7 +856,7 @@ e
 ))
 ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box59
-Package hyperref Info: Link coloring OFF on input line 49.
+Package hyperref Info: Link coloring OFF on input line 28.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -866,9 +866,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count169
 )
-LaTeX Info: Redefining \ref on input line 49.
-LaTeX Info: Redefining \pageref on input line 49.
-LaTeX Info: Redefining \nameref on input line 49.
+LaTeX Info: Redefining \ref on input line 28.
+LaTeX Info: Redefining \pageref on input line 28.
+LaTeX Info: Redefining \nameref on input line 28.
 
 (./ADS_P2_G6_Presentation.out) (./ADS_P2_G6_Presentation.out)
 \@outlinefile=\write5
@@ -899,16 +899,16 @@ Dictionary: translator-numbers-dictionary, Language: English
 r-theorem-dictionary/translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-LaTeX Info: Redefining \includegraphics on input line 49.
+LaTeX Info: Redefining \includegraphics on input line 28.
 
 (./ADS_P2_G6_Presentation.nav)
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/sc' in size <4> not available
-(Font)              size <5> substituted on input line 51.
+(Font)              size <5> substituted on input line 30.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <4> not available
-(Font)              size <5> substituted on input line 51.
+(Font)              size <5> substituted on input line 30.
 
 [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
@@ -923,10 +923,10 @@ File: ../../../../../Downloads/pet47.jpg Graphic file (type jpg)
 
 <use ../../../../../Downloads/pet47.jpg>
 Package pdftex.def Info: ../../../../../Downloads/pet47.jpg used on input line 
-66.
+45.
 (pdftex.def)             Requested size: 307.30731pt x 230.48048pt.
 
-Overfull \vbox (3.73796pt too high) detected at line 66
+Overfull \vbox (3.73796pt too high) detected at line 45
  []
 
 [4
@@ -937,16 +937,16 @@ File: ../../../../../Downloads/pet197.jpg Graphic file (type jpg)
 
 <use ../../../../../Downloads/pet197.jpg>
 Package pdftex.def Info: ../../../../../Downloads/pet197.jpg used on input line
- 70.
+ 49.
 (pdftex.def)             Requested size: 307.30731pt x 226.79279pt.
  [5
 
  <../../../../../Downloads/pet197.jpg>]
-LaTeX Font Info:    Try loading font information for U+msa on input line 82.
+LaTeX Font Info:    Try loading font information for U+msa on input line 61.
  (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 82.
+LaTeX Font Info:    Try loading font information for U+msb on input line 61.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -958,7 +958,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: ../../../../../Downloads/predictiveprogram.png Graphic file (type png)
  <use ../../../../../Downloads/predictiveprogram.png>
 Package pdftex.def Info: ../../../../../Downloads/predictiveprogram.png used on
- input line 86.
+ input line 65.
 (pdftex.def)             Requested size: 307.28961pt x 147.98917pt.
  [7
 
@@ -995,7 +995,7 @@ Package pdftex.def Info: ../../../../../Downloads/predictiveprogram.png used on
 File: ../../../../../Downloads/predictiveprogram.png Graphic file (type png)
  <use ../../../../../Downloads/predictiveprogram.png>
 Package pdftex.def Info: ../../../../../Downloads/predictiveprogram.png used on
- input line 148.
+ input line 128.
 (pdftex.def)             Requested size: 307.28961pt x 147.98917pt.
 
 [22
@@ -1018,8 +1018,6 @@ Package pdftex.def Info: ../../../../../Downloads/predictiveprogram.png used on
 
 ] [31
 
-] [32
-
 ]
 \tf@nav=\write6
 \openout6 = `ADS_P2_G6_Presentation.nav'.
@@ -1030,12 +1028,11 @@ Package pdftex.def Info: ../../../../../Downloads/predictiveprogram.png used on
 \tf@snm=\write8
 \openout8 = `ADS_P2_G6_Presentation.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 191.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 191.
-
-(./ADS_P2_G6_Presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 191.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 191.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 202.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 202.
+ (./ADS_P2_G6_Presentation.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 202.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 202.
 Package rerunfilecheck Info: File `ADS_P2_G6_Presentation.out' has not changed.
 
 (rerunfilecheck)             Checksum: D026979712840B092FC74E5D434EFF5B;674.
@@ -1046,11 +1043,11 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 21219 strings out of 492995
- 428332 string characters out of 6132704
- 506671 words of memory out of 5000000
- 24224 multiletter control sequences out of 15000+600000
- 10440 words of font info for 39 fonts, out of 8000000 for 9000
+ 21231 strings out of 492995
+ 428659 string characters out of 6132704
+ 506144 words of memory out of 5000000
+ 24238 multiletter control sequences out of 15000+600000
+ 10741 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  48i,20n,63p,808b,775s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pf
@@ -1058,10 +1055,10 @@ b></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
 /usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></us
 r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on ADS_P2_G6_Presentation.pdf (32 pages, 596897 bytes).
+Output written on ADS_P2_G6_Presentation.pdf (31 pages, 597550 bytes).
 PDF statistics:
- 1450 PDF objects out of 1728 (max. 8388607)
- 1364 compressed objects within 14 object streams
- 77 named destinations out of 1000 (max. 500000)
+ 1410 PDF objects out of 1440 (max. 8388607)
+ 1325 compressed objects within 14 object streams
+ 75 named destinations out of 1000 (max. 500000)
  202 words of extra memory for PDF output out of 10000 (max. 10000000)
 
