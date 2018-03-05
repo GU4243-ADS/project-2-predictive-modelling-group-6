@@ -46,8 +46,18 @@ Find:
 Cats are hard to be predicted, 50% of cats are missclassified. 
 
 ### Contribution
-+ Feature extraction: WC (feature list), JL (feature list), MD (feature list). 
-+ Model cross validation and training: JL (gradient boosting machine baseline reproduction), KL (NN), DP (random forests).
++ Feature extraction: WC (color,LBP), JL (HOG), MD (sift). 
++ Model cross validation and training: 
+  JL (gradient boosting machine baseline reproduction), KL (NN), DP (random forests).
 + Code review and clean-up, and overall architecture finalization: JL,WC,KL,MD
 + Project management and planning, and GitHub repository organization: DP
 + Project writeup: DP,JL,WC,KL,MD
+
+Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
+Mingkai Deng:   feature(SIFT), Final Code writeup, slides
+Jiongjiong Li:  feature(HOG), model(GBM, Adaboost, XGBoost), Final Code writeup
+Kai Li:         model(Neural Network),Final Code writeup, Readme
+Daniel Parker:  model(Random Forest), slides
+
+
+
