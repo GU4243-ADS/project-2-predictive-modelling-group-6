@@ -8,7 +8,7 @@ Term: Spring 2018
 + Project title: Cat or Dog: Predictive Modelling and Computation Time Optimization
 + Team Number: 6
 + Team Members: Wanting Cheng, Mingkai Deng, Jiongjiong Li, Kai Li, Daniel Parker
-+ [Project Presentation](doc/Presentation/ADS_P2_G6_Presentation.pdf)
++ [Project Description](doc/Presentation/ADS_P2_G6_Presentation.pdf)
 
 
 
@@ -62,7 +62,7 @@ mian.R is the main file wrap all codes together located in \doc
 train.R and test.R are only functions are called in the main.R located in \lib
 
 ### Contribution
-Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
+Wanting Chen:   fearure(color, LBP), model and CV(SVM), Wrote "main", "train","test", "feature" functions and code structures. Final Code writeup and cleaning.
 
 Mingkai Deng:   feature(SIFT), Final Code writeup, slides
 
