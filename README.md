@@ -43,6 +43,9 @@ We choose to generate four kinds of features: HOG, LBP, color, and SIFT.
 ### Outcomes
 The following table shows the accuracy and training time corresponding to different models and features.
 ![image](figs/outcome_acc_time.png)
+The gree cell is the baseline model
+
+The red cells are the model with better performance.
 
 ### Findings
 Find:
@@ -65,3 +68,4 @@ Daniel Parker:  model(Random Forest), slides, project meeting organization
 
 
 
+the
