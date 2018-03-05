@@ -9,4 +9,4 @@
 \beamer@subsectionintoc {3}{3}{Statistical machine learning models}{14}{0}{3}
 \beamer@subsectionintoc {3}{4}{Tuning and training}{20}{0}{3}
 \beamer@sectionintoc {4}{Results}{22}{0}{4}
-\beamer@sectionintoc {5}{Discussion}{27}{0}{5}
+\beamer@sectionintoc {5}{Discussion}{26}{0}{5}

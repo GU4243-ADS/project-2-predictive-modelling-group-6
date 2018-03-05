@@ -10,18 +10,17 @@ Term: Spring 2018
 + Team Members: Wanting Cheng, Mingkai Deng, Jiongjiong Li, Kai Li, Daniel Parker
 + Project summary: [a short summary] 
 
-Contribution statement (to expand): 
-+ All team members approve our work presented in this GitHub repository including this contributions statement. 
-+ Feature extraction: WC (feature list), JL (feature list), MD (feature list). 
-+ Model cross validation and training: WC (neural network), MD (logistic regression, AdaBoost), JL (gradient boosting machine baseline reproduction), KL (TensorFlow), DP (random forests).
-+ Code review and clean-up, and overall architecture finalization: ?
-+ Project management and planning, and GitHub repository organization: DP.
-+ Project writeup: DP.
+
 
 This folder is organized as follows.
 
 ### Project and Data Description
 
+![image](figs/pet1990.jpg)
+
+![image](figs/pet1992.jpg)
+
+The Project aims to improve the baseline model which is sift feature + BGM model.
 
 #### Data Description
 In the training data, 2000 raw pictures including dogs and cats with labels. 
@@ -45,13 +44,21 @@ We choose to generate four kinds of features: HOG, LBP, color, and SIFT.
 
 ### Outcomes
 The following table shows the accuracy and training time corresponding to different models and features.
+![image](figs/outcome_acc_time.png)
 
 ### Findings
-
+Find:
+Cats are hard to be predicted, 50% of cats are misclassified. 
+The results are not as good as we thought by trying different models and features. The potential problem is the feature is not good enough because our features are focusing on the structure of the dogs or cats. However, the general structure of cats or dogs is pretty similar.
+Convolutional Neural Network might give us better features, but it is very time-consuming. Thus, we give up this method considering the size of testing data and limited time. 
 
 ### Contribution
-Find:
-Cats are hard to be predicted, 50% of cats are missclassified. 
+Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
+Mingkai Deng:   feature(SIFT), Final Code writeup, slides
+Jiongjiong Li:  feature(HOG), model(GBM, Adaboost, XGBoost), Final Code writeup
+Kai Li:         model(Neural Network, kNN(not used)), rotation image features, Final Code writeup, Readme
+Daniel Parker:  model(Random Forest), slides, project meeting organization
 
 
-  
+
+
