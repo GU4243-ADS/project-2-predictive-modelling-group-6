@@ -8,7 +8,7 @@ Term: Spring 2018
 + Project title: Cat or Dog: Predictive Modelling and Computation Time Optimization
 + Team Number: 6
 + Team Members: Wanting Cheng, Mingkai Deng, Jiongjiong Li, Kai Li, Daniel Parker
-+ Project summary: [a short summary] 
++ Project presentation: [project-2-predictive-modelling-group-6/doc/Presentation/ADS_P2_G6_Presentation.pdf]
 
 
 
