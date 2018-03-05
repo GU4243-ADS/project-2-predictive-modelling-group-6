@@ -13,24 +13,13 @@ NN_model<- function(train_data,train_label, export=T){
   library(keras)
   library(caret)
 
-  
-  trainy <- list()
-  for (i in 1:nrow(train_label)) {
-    if (train_label$label[i]=="dog"){
-      trainy[i] <-1
-    }
-    else{
-      trainy[i] <-0
-    }
-  }
 
-  # Remove the first column which is the image name indicator   
-  trainx <- train_data[1:nrow(train_data),2:ncol(train_data)]
+  # Remove the first column which is the image name indicator
   # Transform dataset into a large matrix
-  trainx <- data.matrix(trainx, rownames.force = NA)
+  trainx <- data.matrix(train_data, rownames.force = NA)
   trainx <- unname(trainx, force = FALSE)
 
-  trainlabels <- to_categorical(trainy)
+  trainy <- to_categorical(train_label)
   n <- ncol(trainx)
   
   #Create the model (where to recreate the model)
@@ -44,7 +33,7 @@ NN_model<- function(train_data,train_label, export=T){
     layer_dropout(rate = 0.3) %>%
     layer_dense(units= 128, activation = "relu") %>%
     layer_dropout(rate = 0.3) %>%
-    layer_dense(units= 2, activation = "softamx")
+    layer_dense(units= 2, activation = "softmax")
   # The final layer outputs is binary by using softmax activation function.
   
   # Compile 
@@ -63,13 +52,15 @@ NN_model<- function(train_data,train_label, export=T){
   # Batch size -- the nuber of training examples in one forward/backward pass. the higher batch size, the more memory space required.
   history <- model %>%
     fit(trainx, 
-        trainlabels,
+        trainy,
         epochs = 50, 
         batch_size = 48)
   
   #model evalutaion and save the model
-  model %>% evaluate(trainx,trainlabels)
-  saveRDS(model, "NN_model.rds")
+  model %>% evaluate(trainx,trainy)
+  
+  saveRDS(model, "../output/NN_model.Rdata")
+  return(model)
 }
   
   
