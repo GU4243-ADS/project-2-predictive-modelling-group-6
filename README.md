@@ -65,7 +65,7 @@ The result table is stored as figs/outcome_acc_time.png in \fig
 ### Contribution
 Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
 
-Mingkai Deng:   feature(SIFT), Final Code writeup, slides
+Mingkai Deng:   feature(SIFT) and extraction strategy analysis, Final Code writeup, precision-recall analysis, slides
 
 Jiongjiong Li:  feature(HOG), model(GBM, Adaboost, XGBoost), Final Code writeup, data processing(split data)
 
