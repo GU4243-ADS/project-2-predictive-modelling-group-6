@@ -66,7 +66,7 @@ Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
 
 Mingkai Deng:   feature(SIFT), Final Code writeup, slides
 
-Jiongjiong Li:  feature(HOG), model(GBM, Adaboost, XGBoost), Final Code writeup
+Jiongjiong Li:  feature(HOG), model(GBM, Adaboost, XGBoost), Final Code writeup, data processing(split data)
 
 Kai Li:         model(Neural Network, kNN(not used)), rotation image features, Final Code writeup, Readme
 
