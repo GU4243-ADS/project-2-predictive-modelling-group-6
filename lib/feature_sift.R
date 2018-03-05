@@ -41,25 +41,34 @@ k = 200
 #              nstart = 5, iter.max = 20)
 
 # Save k-means model
-km.filename.template = '../output/sift_feature_kmeans_model_%d.RData'
-km.filename = sprintf(km.filename.template, k)
+#km.path <- '../output'
+km.path <- '.'
+km.filename.template = 'sift_feature_kmeans_model_%d.RData'
+km.filepath.template = file.path(km.path, km.filename.template)
+km.filename = sprintf(km.filepath.template, k)
 # save(km, file=sprintf(model.name.template, k))
 
 load(km.filename)
 
 # For each image, classify each sift key-point and compile
 # them into a list 
-data.path <- 'train-features/' # Change here for image data path
-image.name.template <- 'pet%i.jpg.sift.Rdata' # Change here for 
-                                              # filename template
+data.path <- 'train-features' # Change here for image data path
+image.name.template <- 'pet%i'
+image.sift.template <- '%s.jpg.sift.Rdata'
+
 n.images <- 2000
 image.names <- vector(mode='list', length=n.images)
 sift.tokens <- vector(mode='list', length=n.images)
-file.name.template <- paste(data.path, image.name.template, sep='')
+file.name.template <- file.path(data.path, 
+                                sprintf(image.sift.template, 
+                                        image.name.template)
+                                )
 for (i in 1:n.images){
-  load(sprintf(file.name.template, i))
+  file.name <- sprintf(file.name.template, i)
+  load(file.name)
   cluster_labels = knn(km$centers, features, 1:k)
-  image.names[[i]] = file.name
+  image.name <- sprintf(image.name.template, i)
+  image.names[[i]] = image.name
   sift.tokens[[i]] = cluster_labels
 }
 
@@ -78,12 +87,18 @@ doc.term.mat = create_dtm(iterator, vectorizer)
 
 # Tidy up and save the outputs to file
 sift.data <- as.data.frame(as.matrix(doc.term.mat))
+colnames(sift.data) <- unlist(lapply(colnames(sift.data), 
+                                     function(s) paste('sift_', s, sep='')
+                                     )
+                              )
 # Due to high overload, we normalize each row vector 
 # to have L2 norm 1
 norm <- apply(sift.data, 1, function(x) sqrt(sum(x^2)))
 sift.data <- sift.data / norm
-out.data <- data.frame()
-out.path.template <- 'sift_features_%d.RData'
+train_sift_200 <- data.frame(image = rownames(sift.data),
+                       sift.data)
+out.path.template <- 'train_sift_%d.RData'
 out.filename <- sprintf(out.path.template, k)
-save(sift.data, file=out.filename)
+save(train_sift_200, file=out.filename)
 print(sprintf('SIFT features saved at %s', out.filename))
+

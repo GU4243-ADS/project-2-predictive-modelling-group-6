@@ -7,7 +7,8 @@
 ### ADS Spring 2018
 
 test <- function(model_spec, test_data, test.GBM = F, 
-                 test.RF = F, test.TF = F, test.Ada = F, test.XGB = F){
+                 test.RF = F, test.TF = F, test.Ada = F, 
+                 test.SVM = F, test.XGB = F){
   
   ### Fit the classfication model with testing data
   
@@ -34,6 +35,11 @@ test <- function(model_spec, test_data, test.GBM = F,
   if(test.TF){
     
   }
+  if(test.SVM){
+    pred <- predict(model_spec, test_data)
+    return(pred)
+    
+  }
   
   if(test.Ada){
     pred <- predict(model_spec$model, test_data, n.trees = model_spec$best.iter2)
@@ -41,7 +47,7 @@ test <- function(model_spec, test_data, test.GBM = F,
     return(pred)
   }
   if(test.XGB){
-    pred <- predict(model_spec, data.matrix(test_data))
+    pred <- predict(fit, data.matrix(test_data))
     pred <- ifelse((pred > 0.5),1,0)
     return(pred)
   }
