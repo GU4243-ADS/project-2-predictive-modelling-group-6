@@ -7,7 +7,7 @@
 ### ADS Spring 2018
 
 
-train <- function(train_data, train_label, params, run.RF = F,run.tf = F,
+train <- function(train_data, train_label, run.RF = F,run.tf = F,
                   run.Ada = F, run.GBM = F, run.XGB = F, run.SVM = F, export = T){
   
 
@@ -20,7 +20,7 @@ train <- function(train_data, train_label, params, run.RF = F,run.tf = F,
   ### load libraries
   library("gbm")
 
-  RF <- function(train_data, train_label, params){
+  RF <- function(train_data, train_label){
   
     require(randomForest, quietly = TRUE)
     
@@ -36,12 +36,12 @@ train <- function(train_data, train_label, params, run.RF = F,run.tf = F,
     
     }
 
-  TF <- function(train_data, train_label, params){
+  TF <- function(train_data, train_label){
     
     save(tf_model, file = "../output/tf_model.Rdata")
     return(TF_model)
   }
-  SVM <- function(train_data, train_label, params){
+  SVM <- function(train_data, train_label){
     
     library("e1071")
     
@@ -50,7 +50,7 @@ train <- function(train_data, train_label, params, run.RF = F,run.tf = F,
     return(svm_model)
   }
   
-  Ada <- function(train_data, train_label, params){
+  Ada <- function(train_data, train_label){
     if(!suppressWarnings(require('gbm')))
     {
       install.packages('gbm')
@@ -70,20 +70,20 @@ train <- function(train_data, train_label, params, run.RF = F,run.tf = F,
                    keep.data = TRUE,
                    verbose = TRUE,
                    train.fraction = 0.5,
-                   bag.fraction = 0.5
+                   bag.fraction = 0.5,
+                   cv.folds = 5
+                   
     )
     
     # Using cross validation to find the best iteration number
-    best.iter2<-gbm.perf(adaboost1,method = "OOB")
+    best.iter2<-gbm.perf(adaboost1,method = "cv")
     
     result <- list(model = adaboost1, params = best.iter2)
-    if(export){
-      save(result, file = "../output/ada_model.Rdata")
-    }
+
     return(result)
   }
   
-  Xgb <- function(train_data, train_label, params){
+  Xgb <- function(train_data, train_label){
     if(!suppressWarnings(require('xgboost')))
     {
       install.packages('xgboost')
@@ -101,13 +101,11 @@ train <- function(train_data, train_label, params, run.RF = F,run.tf = F,
                       objective = "binary:logistic")
     
     result <- xgboost1
-    if(export){
-      save(result, file = "../output/xgb_model.Rdata")
-    }
+
     return(result)
   }
   
-  GBM <- function(train_data, train_label, params){
+  GBM <- function(train_data, train_label){
     if(!suppressWarnings(require('gbm')))
     {
       install.packages('gbm')
@@ -120,46 +118,45 @@ train <- function(train_data, train_label, params, run.RF = F,run.tf = F,
               data = train_data,
               distribution = "bernoulli",
               n.trees = 1000,
-              shrinkage = 0.005,
+              shrinkage = params,
               interaction.depth = 6,
               n.minobsinnode = 10,
               keep.data = TRUE,
               verbose = TRUE,
               train.fraction = 0.5,
-              bag.fraction = 0.5
+              bag.fraction = 0.5,
+              cv.folds = 5
     )
-    best.iter2<-gbm.perf(gbm1,method = "OOB")
+    best.iter2<-gbm.perf(gbm1,method = "cv")
     
     result <- list(model = gbm1, params = best.iter2)
-    if(export){
-    save(result, file = "../output/gbm_model.Rdata")
-    }
+
     return(result)
   }
 
   ### Train with selected model
   if(run.RF){
-    RF_model <- RF(train_data, train_label, params)
+    RF_model <- RF(train_data, train_label)
     return(RF_model)
   }
   if(run.tf){
-    TF_model <- TF(train_data, train_label, params)
+    TF_model <- TF(train_data, train_label)
     return(TF_model)
   }
   if(run.Ada){
-    Ada_model <- Ada(train_data, train_label, params)
+    Ada_model <- Ada(train_data, train_label)
     return(Ada_model)
   }
   if(run.GBM){
-    GBM_model <- GBM(train_data, train_label, params)
+    GBM_model <- GBM(train_data, train_label)
     return(GBM_model)
   }
   if(run.XGB){
-    XGB_model <- Xgb(train_data, train_label, params)
+    XGB_model <- Xgb(train_data, train_label)
     return(XGB_model)
   }
   if(run.SVM){
-    SVM_model <- SVM(train_data, train_label, params)
+    SVM_model <- SVM(train_data, train_label)
     return(SVM_model)
   }
 
