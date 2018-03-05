@@ -36,12 +36,12 @@ We choose to generate four kinds of features: HOG, LBP, color, and SIFT.
  + HSV: is an alternative representation of RGB features. The color of each hue is central axis of natural color ranging from black to white. The value of dimensions represents the various shades of brightly and a mixture of paints with varying amount of black or white.
 
 ### We choose fix models:
-+ GBM:
-+ Random Forest:
-+ Neural Network:
-+ Adaboost:
-+ XGBoost:
-+ SVM:
++ Gradient Boosting Machine (GBM): GBM is used to regression and classification problems, and it produces the model by allowing optimization of an arbitrary differentiable loss function. The algorithm is building a strong model based on many weaker ones sequentially by optimizes a cost function over function space by choosing the function that points that in the negative gradient direction. 
++ Random Forest (RF): RF is constructing a multitude of decision trees at training and output of the classes of the individual trees.
++ Neural Network (NN): NN uses the system "learn" to improve the performance based on examples without task-specific programming. NN is based on a collection of connected units. For each connection, data is transformed into signal between connection and units, and the output of each unit is calculated a non-linear function of the sum of inputs. 
++ AdaBoost (Ada): Ada is usually less susceptible to the overfitting problem, and the process is selecting features improved the predictive power of the model in order to reduce dimensionality and execution time. 
++ XGBoost (XGB): XGB is an importer of GBM, and XGB is used a more regularized model formalization to control over-fitting, which gives it better performance.
++ Support Vector Machine SVM: SVM has mapped the examples of the separate categories are divided by a clear gap to separate into two classes. 
 
 ### Outcomes
 The following table shows the accuracy and training time corresponding to different models and features.
@@ -51,7 +51,7 @@ The following table shows the accuracy and training time corresponding to differ
 
 ### Contribution
 Find:
-Cat is hard to be predicted, 50% of cats are missclassified. 
+Cats are hard to be predicted, 50% of cats are missclassified. 
 
 
-
+  
