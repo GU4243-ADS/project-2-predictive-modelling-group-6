@@ -1,0 +1,102 @@
+\documentclass[serif]{beamer}
+\usepackage{beamerthemesplit}
+\usepackage{tikz}
+\usetheme{Frankfurt}
+\usecolortheme{crane}
+\usefonttheme{structuresmallcapsserif}
+
+\title{Cat or Dog: Predictive Modelling}
+\subtitle{STAT GU4243 - Applied Data Science}
+\author{Group 6}
+\institute{Columbia University}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section{Outline}
+\frame{\tableofcontents}
+
+\section{Introduction}
+\subsection{Us}
+\frame{
+	\frametitle{Group members}
+	Wanting Cheng, Mingkai Deng, Jiongjiong Li, Kai Li, Daniel Parker
+}
+\subsection{Motivation}
+\frame{
+	\frametitle{Why do this?---Motivation}
+	% Image of a cat and a dog
+}
+\subsection{Scope}
+\frame{
+	\frametitle{Spec \& Scope}
+	% Write about project description
+	% Include the system graphic
+}
+
+\section{Method}
+\subsection{Exploratory Analysis}
+\frame{
+	\frametitle{Exploratory Analysis}
+	What makes one animal different from another?
+}
+\subsection{Feature Extraction}
+\frame{
+	\frametitle{Feature Extraction}
+	\begin{enumerate}
+	\item<1-> SIFT = scale-invariant feature transformation.
+	\item<2-> HOG = histogram of oriented gradients.
+	\item<3-> LBP = local binary patterns.
+	\item<4-> HSV = hue, saturation, value.
+	\item<5-> RGB = red, green, blue.
+	\end{enumerate}
+}
+\subsection{Statistical machine learning models}
+\frame{
+	\frametitle{Models}
+	\begin{enumerate}
+	\item<1-> SIFT = scale-invariant feature transformation.
+	\item<2-> HOG = histogram of oriented gradients.
+	\item<3-> LBP = local binary patterns.
+	\item<4-> HSV = hue, saturation, value.
+	\item<5-> RGB = red, green, blue.
+	\end{enumerate}}
+
+\section{Results}
+\frame{
+	\frametitle{Computation time}
+% Table including the information that's been determined
+}
+\frame{
+	\frametitle{Accuracy}
+% Table including the information that's been determined
+}
+\frame{
+	\frametitle{Prediction time}
+% Table including the information that's been determined
+}
+\frame{
+	\frametitle{Comparison visualization}
+% ggplot visualization scatterplot: 
+%% x axis: time to make prediction
+%% y axis: accuracy in percentage
+}
+
+\section{Discussion}
+\frame{
+	\frametitle{Further directions to explore}
+	\begin{enumerate}
+	\item<1-> Other extractions.
+	\item<2-> Dataset manipulation to ``grow" more training data for free.
+	\item<3-> Other models.
+	\item<4-> Ensembling.
+	\item<5-> $\ldots$
+	\end{enumerate}
+}
+\frame{
+Thank you!
+}
+
+\end{document}
