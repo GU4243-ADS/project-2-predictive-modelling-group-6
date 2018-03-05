@@ -55,6 +55,12 @@ The results are not as good as we thought by trying different models and feature
 
 Convolutional Neural Network might give us better features, but it is very time-consuming. Thus, we give up this method considering the size of testing data and limited time. 
 
+
+### File Structure
+mian.R is the main file wrap all codes together
+
+train.R and test.R are only functions are called in the main.R
+
 ### Contribution
 Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
 
@@ -66,7 +72,3 @@ Kai Li:         model(Neural Network, kNN(not used)), rotation image features, F
 
 Daniel Parker:  model(Random Forest), slides, project meeting organization
 
-
-
-
-the
