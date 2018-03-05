@@ -56,7 +56,7 @@ In this step, we have a set of controls for the model evaluation.  The code in t
 ```{r exp_setup}
 run.feature.train <- F # process features for training set
 run.test          <- T # run evaluation on an independent test set
-run.feature.test  <- F # process features for test set
+run.feature.test  <- T # process features for test set
 run.sift <- F
 run.GBM <- F
 run.RF = F
