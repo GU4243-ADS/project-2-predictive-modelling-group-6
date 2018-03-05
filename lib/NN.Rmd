@@ -343,7 +343,7 @@ trainy<-pptrainy
 trainy <- to_categorical(trainy, 2)
 trainy <- trainy[,2]
 trainy <- as.data.frame(trainy)
-trainy <- rbind(trainy,trainy,trainy,trainy)
+trainy <- rbind(trainy,trainy)
 trainy1 <- trainy
 train_total1 <- cbind(trainy1,train_total)
 
@@ -380,13 +380,12 @@ model %>%
 
 
 model %>% compile(
-  loss = 'categorical_crossentropy',
+  loss = 'binary_crossentropy',
   optimizer = optimizer_rmsprop(),
   metrics = c('accuracy')
 )
 
-ss
-  
+
   history <- model %>% fit(
    trainx1, trainy1, 
    epochs = 50, batch_size = 50 
