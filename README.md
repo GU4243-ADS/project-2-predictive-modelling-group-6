@@ -17,7 +17,9 @@ This folder is organized as follows.
 ### Project and Data Description
 
 ![image](figs/pet1990.jpg)
+
 ![image](figs/pet1992.jpg)
+
 The Project aims to improve the baseline model which is sift feature + BGM model.
 
 #### Data Description
