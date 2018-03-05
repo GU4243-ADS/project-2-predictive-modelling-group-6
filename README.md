@@ -61,8 +61,9 @@ mian.R is the main file wrap all codes together located in \doc
 
 train.R and test.R are only functions are called in the main.R located in \lib
 
+The result table is stored as figs/outcome_acc_time.png in \fig
 ### Contribution
-Wanting Chen:   fearure(color, LBP), model and CV(SVM), Wrote "main", "train","test", "feature" functions and code structures. Final Code writeup and cleaning.
+Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
 
 Mingkai Deng:   feature(SIFT), Final Code writeup, slides
 
