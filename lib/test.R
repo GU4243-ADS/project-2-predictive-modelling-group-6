@@ -33,6 +33,13 @@ test <- function(model_spec, test_data, test.GBM = F,
   }
   
   if(test.NN){
+    testx <- data.matrix(test_data, rownames.force = NA)
+    testx <- unname(testx, force = FALSE)
+    n <- ncol(testx)
+    
+    pred <- model%>%
+      predict_classes(testx)
+    return(pred)
     
   }
   if(test.SVM){

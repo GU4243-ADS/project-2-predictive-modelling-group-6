@@ -112,12 +112,14 @@ if(run.sift){
   source("../lib/feature_sift.R")
   sift_features <- sift_extraction(km, sift_dir)
   
+}else{
+  load("../output/sift_features_200.RData")
 }
 
-load("../data/split_data/train/train_HOG.Rdata")
-load("../data/split_data/test/test_HOG.Rdata")
-train_HOG <- train_HOG[,-1]
-test_HOG <- test_HOG[,-1]
+load("../data/split_data/train/train_LBP.Rdata")
+load("../data/split_data/test/test_LBP.Rdata")
+train_HOG <- train_LBP[,-1]
+test_HOG <- test_LBP[,-1]
 
 
 
@@ -206,3 +208,9 @@ cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
 cat("Time for training model=", tm_train[1], "s \n")
 cat("Time for making prediction=", tm_test[1], "s \n")
 ```
+
+
++ HOG and SVM 77.5&, 33.099 s
++ LBP and SVM 69.75&,  0.805 s 
+
+
