@@ -127,8 +127,9 @@
 	\includegraphics[width=\linewidth, height=\textheight,keepaspectratio]{../../../../../Downloads/predictiveprogram.png}
 }
 
+\subsection{Feature extraction}
 \frame{
-	\frametitle{Feature extraction time}
+	\frametitle{Feature Extraction Time}
 	\begin{table}
 	\begin{tabular}{r | c | c | c }
 	Feature type & Color & HOG & LBP \\ 
@@ -139,6 +140,7 @@
 	\end{table}
 }
 
+\subsection{Computational cost}
 \frame{
 	\frametitle{Training Times---Computational Cost}
 	\begin{table}
@@ -158,6 +160,7 @@
 	\end{table}
 }
 
+\subsection{Prediction accuracy}
 \frame{
 	\frametitle{Prediction Accuracy}
 	\begin{table}
@@ -177,6 +180,12 @@
 	\end{table}
 }
 
+\subsection{Final result}
+\frame{
+	\frametitle{Final Result}
+	Our final feature extraction and model choice is HOG features with XGBoost. This choice optimizes extraction time, training time, and prediction accuracy.
+}
+
 %\frame{
 %	\frametitle{Comparison}
 %% ggplot visualization scatterplot: 
@@ -185,6 +194,80 @@
 %}
 
 \section{Discussion}
+\subsection{Confusion matrices}
+\frame{
+	\frametitle{Confusion Matrices: Random Forest}
+	\begin{table}
+	\begin{tabular}{r | c | c }
+	RF Prediction & Dog & Cat\\
+	\hline
+	Truth & &\\
+	Dog & 54 & 19\\
+	Cat & 92 & 35
+	\end{tabular}
+	\caption{RF-SIFT Confusion Matrix}
+	\end{table}
+		\begin{table}
+	\begin{tabular}{r | c | c }
+	RF Prediction & Dog & Cat\\
+	\hline
+	Truth & &\\
+	Dog & 247 & 26\\
+	Cat & 77 & 50
+	\end{tabular}
+	\caption{RF-HOG Confusion Matrix}
+	\end{table}
+}
+
+\frame{
+	\frametitle{Confusion Matrices: Gradient Boosting Machine}
+	\begin{table}
+	\begin{tabular}{r | c | c }
+	GBM Prediction & Dog & Cat\\
+	\hline
+	Truth & &\\
+	Dog & 229 & 44\\
+	Cat & 63 & 64
+	\end{tabular}
+	\caption{GBM-SIFT Confusion Matrix}
+	\end{table}
+	\begin{table}
+	\begin{tabular}{r | c | c }
+	GBM Prediction & Dog & Cat\\
+	\hline
+	Truth & &\\
+	Dog & 232 & 41\\
+	Cat & 58 & 69
+	\end{tabular}
+	\caption{GBM-HOG Confusion Matrix}
+	\end{table}
+}
+
+\frame{
+	\frametitle{Confusion Matrices: Neural Network}
+	\begin{table}
+	\begin{tabular}{r | c | c }
+	NN Prediction & Dog & Cat\\
+	\hline
+	Truth & &\\
+	Dog & 233 & 40\\
+	Cat & 55 & 72
+	\end{tabular}
+	\caption{NN-SIFT Confusion Matrix}
+	\end{table}
+	\begin{table}
+	\begin{tabular}{r | c | c }
+	NN Prediction & Dog & Cat\\
+	\hline
+	Truth & &\\
+	Dog & 263 & 10\\
+	Cat & 89 & 38
+	\end{tabular}
+	\caption{NN-HOG Confusion Matrix}
+	\end{table}
+}
+
+\subsection{Further directions}
 \frame{
 	\frametitle{Further directions to explore}
 	\begin{enumerate}
@@ -195,6 +278,7 @@
 	\item<5-> $\ldots$
 	\end{enumerate}
 }
+
 \frame{
 Thank you!
 }
