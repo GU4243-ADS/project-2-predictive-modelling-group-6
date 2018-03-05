@@ -44,6 +44,10 @@ We choose to generate four kinds of features: HOG, LBP, color, and SIFT.
 The following table shows the accuracy and training time corresponding to different models and features.
 ![image](figs/outcome_acc_time.png)
 
+The gree cell is the baseline model
+
+The red cells are the model with better performance.
+
 ### Findings
 Find:
 Cats are hard to be predicted, 50% of cats are misclassified. 
@@ -51,17 +55,20 @@ The results are not as good as we thought by trying different models and feature
 
 Convolutional Neural Network might give us better features, but it is very time-consuming. Thus, we give up this method considering the size of testing data and limited time. 
 
+
+### File Structure
+mian.R is the main file wrap all codes together located in \doc
+
+train.R and test.R are only functions are called in the main.R located in \lib
+
 ### Contribution
-+ Wanting Chen:   fearure(color, LBP), model and CV for SVM, Wrote "main" file and "feature", "train", "test" functions and built up the overall code structures. Final Code writeup and code cleaning.
+Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
 
-+ Mingkai Deng:   feature(SIFT), Final Code writeup, slides
+Mingkai Deng:   feature(SIFT), Final Code writeup, slides
 
-+ Jiongjiong Li:  feature(HOG), model(GBM, Adaboost, XGBoost), Final Code writeup
+Jiongjiong Li:  feature(HOG), model(GBM, Adaboost, XGBoost), Final Code writeup
 
-+ Kai Li:         model(Neural Network, kNN(not used)), rotation image features, Final Code writeup, Readme
+Kai Li:         model(Neural Network, kNN(not used)), rotation image features, Final Code writeup, Readme
 
-+ Daniel Parker:  model(Random Forest), slides, project meeting organization
-
-
-
+Daniel Parker:  model(Random Forest), slides, project meeting organization
 
