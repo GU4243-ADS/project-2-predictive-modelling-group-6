@@ -37,7 +37,7 @@ test <- function(model_spec, test_data, test.GBM = F,
     testx <- unname(testx, force = FALSE)
     n <- ncol(testx)
     
-    pred <- model%>%
+    pred <- model_spec%>%
       predict_classes(testx)
     return(pred)
     

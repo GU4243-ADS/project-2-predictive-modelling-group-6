@@ -10,8 +10,6 @@
 train <- function(train_data, train_label, run.RF = F,run.NN = F,
                   run.Ada = F, run.GBM = F, run.XGB = F, run.SVM = F, export = T){
   
-train_data <- train_HOG
-test_data <- test_HOG
   ### Input: 
   ###  -  processed features from images
   ###  -  labels
