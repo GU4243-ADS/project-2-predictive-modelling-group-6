@@ -28,21 +28,23 @@ In the training data, 2000 raw pictures including dogs and cats with labels.
 
 ### Feature selection
 We choose to generate four kinds of features: HOG, LBP, color and SIFT. 
-+HOG:
-+LBP:
-+Color:
-+SIFT:
++ Histogram of Oriented Gradiendts(HOG):
++ Local Binary Patttens (LBP): is a typical visual descriptor used for computer vision. It  
++ Color:
++ SIFT:
 
 ### Model selection
 We choose fix models:
-+(GBM):
-+Random Forest:
-+Neural Network:
-+Adaboost:
-+XGBoost:
-+SVM:
++ (GBM):
++ Random Forest:
++ Neural Network:
++ Adaboost:
++ XGBoost:
++ SVM:
 
 ### Outcomes
 The following table shows the accuracy and training time corresponding to different models and features.
+
+### Findings
 
 
