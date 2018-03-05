@@ -20,13 +20,29 @@ Contribution statement (to expand):
 
 This folder is organized as follows.
 
-```
-proj/
-├── lib/
-├── data/
-├── doc/
-├── figs/
-└── output/
-```
+### Project and Data Description
 
-Please see each subfolder for a README file.
+
+#### Data Description
+In the training data, 2000 raw pictures including dogs and cats with labels. 
+
+### Feature selection
+We choose to generate four kinds of features: HOG, LBP, color and SIFT. 
++HOG:
++LBP:
++Color:
++SIFT:
+
+### Model selection
+We choose fix models:
++(GBM):
++Random Forest:
++Neural Network:
++Adaboost:
++XGBoost:
++SVM:
+
+### Outcomes
+The following table shows the accuracy and training time corresponding to different models and features.
+
+
