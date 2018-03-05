@@ -104,6 +104,11 @@ color_feature_extraction <- function(img_dir, export = T){
 
 LBP_feature_extraction <- function(img_dir, export = T){
   ### load libraries
+  if(!suppressWarnings(require('wvtool')))
+  {
+    install.packages('wvtool')
+    require('wvtool')
+  }
   library("EBImage")
   library(reticulate)
   library("wvtool")

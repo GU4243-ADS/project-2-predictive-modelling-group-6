@@ -121,7 +121,6 @@ if(run.sift){
   load("../output/sift_features_200.RData")
 }
 # For reproducability and efficiency we just loaded the proprocessed feature data.
-
 load("../data/split_data/train/train_HOG.Rdata")
 load("../data/split_data/test/test_HOG.Rdata")
 train_data <- train_HOG[,-1] # Get rid of the Image column
