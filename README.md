@@ -46,14 +46,8 @@ Find:
 Cats are hard to be predicted, 50% of cats are missclassified. 
 
 ### Contribution
-Ka
-
-
-  
-Contribution statement (to expand): 
-+ All team members approve our work presented in this GitHub repository including this contributions statement. 
 + Feature extraction: WC (feature list), JL (feature list), MD (feature list). 
-+ Model cross validation and training: WC (neural network), MD (logistic regression, AdaBoost), JL (gradient boosting machine baseline reproduction), KL (TensorFlow), DP (random forests).
-+ Code review and clean-up, and overall architecture finalization: ?
-+ Project management and planning, and GitHub repository organization: DP.
-+ Project writeup: DP.
++ Model cross validation and training: JL (gradient boosting machine baseline reproduction), KL (NN), DP (random forests).
++ Code review and clean-up, and overall architecture finalization: JL,WC,KL,MD
++ Project management and planning, and GitHub repository organization: DP
++ Project writeup: DP,JL,WC,KL,MD
