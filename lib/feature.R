@@ -176,6 +176,8 @@ HOG_feature_extraction<- function(img_dir, export=T){
   
   n_files <- length(list.files(img_dir)) # number of total image files
   n_names <- paste0( "pet", 1:n_files, ".jpg")
+  pb <- txtProgressBar(min = 0, max = n_files, style = 3) # Make a progress bar
+  
   
   ### calculate HOG values and store them
   HOG <- data.frame(matrix(NA, n_files, ncol=1765))
@@ -186,7 +188,10 @@ HOG_feature_extraction<- function(img_dir, export=T){
     img_resized <- cv2$resize(img, dsize=tuple(64L, 64L)) # resize the graph
     hog_values <- hog$compute(np_array(img_resized * 255, dtype='uint8')) # compute the HOG calues
     HOG[i,2:1765] <- hog_values
+    setTxtProgressBar(pb, i)
+    
   }
+  close(pb)
   
   ### output constructed features
   if(export){

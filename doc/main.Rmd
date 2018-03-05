@@ -51,6 +51,8 @@ In this step, we have a set of controls for the model evaluation.  The code in t
 + (TRUE/FALSE) run evaluation on an independent test set
 + (TRUE/FALSE) process features for test set
 
++ Note: only turn on one model for each run.
+
 ```{r exp_setup}
 run.feature.train <- F # process features for training set
 run.test          <- T # run evaluation on an independent test set
@@ -80,7 +82,10 @@ load("../data/split_data/test/test_label.Rdata")
 
 For this simple example, we use the row averages of raw pixel values as the visual features. Note that this strategy **only** works for images with the same number of rows. For some other image datasets, the feature function should be able to handle heterogeneous input images. Save the constructed features to the output subfolder.
 
-`feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later. 
+`feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later.
+
++ Note that the feature function only works for extracting one feature, don't simultaneous extract multiple features.
++ Caution: please name the feature data as 'train_data' and 'test_data'
 
 ```{r feature}
 source("../lib/feature.R")
@@ -88,8 +93,8 @@ source("../lib/feature.R")
 tm_feature_train <- NA
 if(run.feature.train){
   tm_feature_train <- system.time(train_data <- feature(img_train_dir, 
-                                                        run.color = T, 
-                                                        run.LBP = T, 
+                                                        run.color = F, 
+                                                        run.LBP = F, 
                                                         run.HOG = T, 
                                                         export=T))
 }else{
@@ -98,9 +103,9 @@ if(run.feature.train){
 
 tm_feature_test <- NA
 if(run.feature.test){
-  tm_feature_test <- system.time(dat_test <- feature(img_test_dir, 
-                                                        run.color = T, 
-                                                        run.LBP = T, 
+  tm_feature_test <- system.time(test_data <- feature(img_test_dir, 
+                                                        run.color = F, 
+                                                        run.LBP = F, 
                                                         run.HOG = T, 
                                                         export=T))
 }else{
@@ -115,10 +120,11 @@ if(run.sift){
 }else{
   load("../output/sift_features_200.RData")
 }
+# For reproducability and efficiency we just loaded the proprocessed feature data.
 
 load("../data/split_data/train/train_HOG.Rdata")
 load("../data/split_data/test/test_HOG.Rdata")
-train_data <- train_HOG[,-1]
+train_data <- train_HOG[,-1] # Get rid of the Image column
 test_data <- test_HOG[,-1]
 
 
@@ -168,8 +174,8 @@ if(run.XGB){
   tm_train <- system.time(MODEL <- train(train_data, train_label, run.XGB=T))
 }
 if(run.SVM){
-  train_data <- train_HOG
-  test_data <- test_HOG
+# SVM working on color feature will output errors since the color feature is not dense enough and 
+  # contains 0 columns.
   tm_train <- system.time(MODEL <- train(train_data, train_label, run.SVM=T))
 }
 
