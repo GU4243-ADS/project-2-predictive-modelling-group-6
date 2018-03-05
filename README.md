@@ -45,6 +45,7 @@ We choose to generate four kinds of features: HOG, LBP, color, and SIFT.
 
 ### Outcomes
 The following table shows the accuracy and training time corresponding to different models and features.
+![image](figs/results_acc_time.png)
 
 ### Findings
 
