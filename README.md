@@ -32,13 +32,15 @@ We choose to generate four kinds of features: HOG, LBP, color, and SIFT.
  + RGB: The color for each cell is defined by three chromaticities combination of Red, Green and Blue. Produce the matrix representing the possible value of color. 
  + HSV: is an alternative representation of RGB features. The color of each hue is central axis of natural color ranging from black to white. The value of dimensions represents the various shades of brightly and a mixture of paints with varying amount of black or white.
 
-### We choose fix models:
+### We choose six models:
 + Gradient Boosting Machine (GBM): GBM is used to regression and classification problems, and it produces the model by allowing optimization of an arbitrary differentiable loss function. The algorithm is building a strong model based on many weaker ones sequentially by optimizes a cost function over function space by choosing the function that points that in the negative gradient direction. 
 + Random Forest (RF): RF is constructing a multitude of decision trees at training and output of the classes of the individual trees.
 + Neural Network (NN): NN uses the system "learn" to improve the performance based on examples without task-specific programming. NN is based on a collection of connected units. For each connection, data is transformed into signal between connection and units, and the output of each unit is calculated a non-linear function of the sum of inputs. 
 + AdaBoost (Ada): Ada is usually less susceptible to the overfitting problem, and the process is selecting features improved the predictive power of the model in order to reduce dimensionality and execution time. 
 + XGBoost (XGB): XGB is an importer of GBM, and XGB is used a more regularized model formalization to control over-fitting, which gives it better performance.
 + Support Vector Machine SVM: SVM has mapped the examples of the separate categories are divided by a clear gap to separate into two classes. 
+
++ Crosee Validation: we tried cross validation for each model, and it is very tiem consuming. Also, outcomes are pretty stable and the differences between validations are usually 1% differences.
 
 ### Outcomes
 The following table shows the accuracy and training time corresponding to different models and features.
@@ -49,11 +51,12 @@ The gree cell is the baseline model
 The red cells are the model with better performance.
 
 ### Findings
-Find:
-Cats are hard to be predicted, 50% of cats are misclassified. 
-The results are not as good as we thought by trying different models and features. The potential problem is the feature is not good enough because our features are focusing on the structure of the dogs or cats. However, the general structure of cats or dogs is pretty similar.
 
-Convolutional Neural Network might give us better features, but it is very time-consuming. Thus, we give up this method considering the size of testing data and limited time. 
+Cats are hard to be predicted, 50% of cats are misclassified. The reason might be the data set contains more dogs than cats, and the model tends to predict more dogs with higher accuracy. Thus, lots of cats are misclassified. 
+
+The results are not as good as we thought by trying different models cross features. The potential problem is that features are not good enough because our features are focusing on the outlines of the dogs or cats. However, the general outlines of cats or dogs are pretty similar. Images such as the top two are pretty similar, and these are pretty hard to extract significant differences of outline between images especially pretty similar images. 
+
+Convolution Neural Network might give us better features, but it is very time-consuming. Thus, we give up this method considering the size of testing data and limited time. 
 
 
 ### File Structure
