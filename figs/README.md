@@ -1,4 +1,6 @@
 # Project 1: 
 ### Figs folder
 
-The figs directory contains the figures. This directory only contains generated files; that is, one should always be able to delete the contents and regenerate them.
+Figs contain following figs:
+outcome_acc_time.png: table for the accuracy and training time for each model cross different features.
+pet1990/1992.jgp: figures from training set used in the main readme.
