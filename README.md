@@ -63,7 +63,7 @@ train.R and test.R are only functions are called in the main.R located in \lib
 
 The result table is stored as figs/outcome_acc_time.png in \fig
 ### Contribution
-Wanting Chen:   fearure(color, LBP), model(SVM), Final Code writeup
+Wanting Cheng:   fearure(RGB, HSV, LBP), model(SVM), built overall architecture(wrote main, train, test, feature functions) and compiled everyone's code, Final Code writeup
 
 Mingkai Deng:   feature(SIFT) and extraction strategy analysis, Final Code writeup, precision-recall analysis, slides
 
